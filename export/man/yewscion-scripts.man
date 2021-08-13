@@ -1,0 +1,95 @@
+.TH "yewscion's scripts" "1" 
+.SH "Wrappers"
+.SS "ADLMidi Wrapper"
+.PP
+The main issue this script is meant to solve is that the \fIadlmidi\fP
+command expects the filename to come first, and the arguments
+after. However, \fIemms\fP expects the arguments to come first, and the
+filename to be the last argument. I thought it would be easier to
+wrap \fIadlmidi\fP than to rewrite part of \fIemms\fP, so I chose to make a
+wrapper script that accnepts arguments the way \fIemms\fP expects, and
+feeds them to \fIadlmidi\fP the way that it expects. So everyone is
+happy.
+
+.RS
+.nf
+\fC#!/usr/bin/env -S bash -i 
+case $# in
+    0)
+	echo "This script runs the adlmidi command with the arguments You
+	specify, while accepting them /before/ the file, not just
+	after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+	;;
+    1)
+	adlmidi $1
+	;;
+    *)
+	file="${@: -1}"
+	arguments=""
+	for i in ${@: 1:$#-1}
+	do
+	    arguments="${arguments} $i"
+	done
+	command="adlmidi ${file} ${arguments}"
+	$command
+	;;
+esac
+
+\fP
+.fi
+.RE
+
+.PP
+We'll need to define some cases here. First, the case of someone
+just calling the script with no arguments. We'll display some
+(nominally) helpful text, that will instruct them to call the
+script as expected.
+
+.RS
+.nf
+\fCecho "This script runs the adlmidi command with the arguments You
+specify, while accepting them /before/ the file, not just
+after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+\fP
+.fi
+.RE
+
+.PP
+With one argument, we'll assumed that the user has supplied a file
+to play. This will just pass it along to \fIadlmidi\fP in that case,
+then.
+
+.RS
+.nf
+\fCadlmidi $1
+\fP
+.fi
+.RE
+
+.PP
+With more than one arguments, we're going to assume \fIeverything\fP
+aside from the script name and last argument are options the user
+has specified. We'll isolate the filename, then build a string of
+all of the arguments delimited by a space. Finally, we'll build a
+new call to \fIadlmidi\fP in the way it expects us to, and then run it.
+
+.RS
+.nf
+\fCfile="${@: -1}"
+arguments=""
+for i in ${@: 1:$#-1}
+do
+    arguments="${arguments} $i"
+done
+command="adlmidi ${file} ${arguments}"
+$command
+\fP
+.fi
+.RE
+
+.PP
+The main use for this is as a backend to \fIemms\fP, so the fact that
+we can't play more than one file with this script is \fInot\fP a
+bug. It's a feature, since \fIemms\fP will be the one controlling the
+order files are played in. We just needed a backend for \fIemms\fP to
+call.

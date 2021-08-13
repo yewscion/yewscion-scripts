@@ -1,0 +1,119 @@
+This is yewscion-scripts.info, produced by makeinfo version 6.7 from
+yewscion-scripts.texi.
+
+INFO-DIR-SECTION Scripts
+START-INFO-DIR-ENTRY
+* Yewscion’s Scripts: (yewscion-scripts). Small Utility Shell Scripts.
+END-INFO-DIR-ENTRY
+
+
+File: yewscion-scripts.info,  Node: Top,  Next: Wrappers,  Up: (dir)
+
+yewscion’s scripts
+******************
+
+* Menu:
+
+* Wrappers::
+
+— The Detailed Node Listing —
+
+Wrappers
+
+* ADLMidi Wrapper::
+
+
+
+File: yewscion-scripts.info,  Node: Wrappers,  Prev: Top,  Up: Top
+
+1 Wrappers
+**********
+
+* Menu:
+
+* ADLMidi Wrapper::
+
+
+File: yewscion-scripts.info,  Node: ADLMidi Wrapper,  Up: Wrappers
+
+1.1 ADLMidi Wrapper
+===================
+
+The main issue this script is meant to solve is that the ‘adlmidi’
+command expects the filename to come first, and the arguments after.
+However, ‘emms’ expects the arguments to come first, and the filename to
+be the last argument.  I thought it would be easier to wrap ‘adlmidi’
+than to rewrite part of ‘emms’, so I chose to make a wrapper script that
+accnepts arguments the way ‘emms’ expects, and feeds them to ‘adlmidi’
+the way that it expects.  So everyone is happy.
+
+     #!/usr/bin/env -S bash -i
+     case $# in
+         0)
+             echo "This script runs the adlmidi command with the arguments You
+             specify, while accepting them /before/ the file, not just
+             after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+             ;;
+         1)
+             adlmidi $1
+             ;;
+         *)
+             file="${@: -1}"
+             arguments=""
+             for i in ${@: 1:$#-1}
+             do
+                 arguments="${arguments} $i"
+             done
+             command="adlmidi ${file} ${arguments}"
+             $command
+             ;;
+     esac
+
+
+   We’ll need to define some cases here.  First, the case of someone
+just calling the script with no arguments.  We’ll display some
+(nominally) helpful text, that will instruct them to call the script as
+expected.
+
+     echo "This script runs the adlmidi command with the arguments You
+     specify, while accepting them /before/ the file, not just
+     after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+
+   With one argument, we’ll assumed that the user has supplied a file to
+play.  This will just pass it along to ‘adlmidi’ in that case, then.
+
+     adlmidi $1
+
+   With more than one arguments, we’re going to assume _everything_
+aside from the script name and last argument are options the user has
+specified.  We’ll isolate the filename, then build a string of all of
+the arguments delimited by a space.  Finally, we’ll build a new call to
+‘adlmidi’ in the way it expects us to, and then run it.
+
+     file="${@: -1}"
+     arguments=""
+     for i in ${@: 1:$#-1}
+     do
+         arguments="${arguments} $i"
+     done
+     command="adlmidi ${file} ${arguments}"
+     $command
+
+   The main use for this is as a backend to ‘emms’, so the fact that we
+can’t play more than one file with this script is _not_ a bug.  It’s a
+feature, since ‘emms’ will be the one controlling the order files are
+played in.  We just needed a backend for ‘emms’ to call.
+
+
+
+Tag Table:
+Node: Top232
+Node: Wrappers435
+Node: ADLMidi Wrapper558
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

@@ -1,0 +1,96 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: yewscion's scripts
+#+date: <2021-08-13 Fri>
+#+author: Christopher Rodriguez
+#+email: yewscion@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.0.50 (Org mode 9.4.6)
+#+texinfo_filename: ./export/texi/yewscion-scripts.info
+#+texinfo_class: info
+#+texinfo_header:
+#+texinfo_post_header:
+#+subtitle: All of the shell scripts I've made, and their documentation.
+#+subauthor:
+#+texinfo_dir_category: Scripts
+#+texinfo_dir_title: Yewscion's Scripts: (yewscion-scripts)
+#+texinfo_dir_desc: Small Utility Shell Scripts
+#+texinfo_printed_title: Yewscion's Scripts
+#+man_filename: ./man/yewscion-scripts.man
+#+property: header-args bash :eval never :mkdirp yes :noweb yes :comments no
+* Wrappers
+** ADLMidi Wrapper
+   The main issue this script is meant to solve is that the =adlmidi=
+   command expects the filename to come first, and the arguments
+   after. However, =emms= expects the arguments to come first, and the
+   filename to be the last argument. I thought it would be easier to
+   wrap =adlmidi= than to rewrite part of =emms=, so I chose to make a
+   wrapper script that accnepts arguments the way =emms= expects, and
+   feeds them to =adlmidi= the way that it expects. So everyone is
+   happy.
+
+   #+begin_src bash :tangle bin/adlmidi-wrapper
+     #!/usr/bin/env -S bash -i 
+     case $# in
+	 0)
+	     <<zero-args>>
+	     ;;
+	 1)
+	     <<one-arg>>
+	     ;;
+	 ,*)
+	     <<many-args>>
+	     ;;
+     esac
+     
+   #+end_src
+
+   We'll need to define some cases here. First, the case of someone
+   just calling the script with no arguments. We'll display some
+   (nominally) helpful text, that will instruct them to call the
+   script as expected.
+   
+   #+name: zero-args
+   #+begin_src bash :eval never :tangle no
+     echo "This script runs the adlmidi command with the arguments You
+     specify, while accepting them /before/ the file, not just
+     after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+   #+end_src
+
+   With one argument, we'll assumed that the user has supplied a file
+   to play. This will just pass it along to =adlmidi= in that case,
+   then.
+   
+   #+name: one-arg
+   #+begin_src bash :eval never :tangle no
+     adlmidi $1
+   #+end_src
+
+   With more than one arguments, we're going to assume /everything/
+   aside from the script name and last argument are options the user
+   has specified. We'll isolate the filename, then build a string of
+   all of the arguments delimited by a space. Finally, we'll build a
+   new call to =adlmidi= in the way it expects us to, and then run it.
+
+   #+name: many-args
+   #+begin_src bash :eval never :tangle no
+     file="${@: -1}"
+     arguments=""
+     for i in ${@: 1:$#-1}
+     do
+	 arguments="${arguments} $i"
+     done
+     command="adlmidi ${file} ${arguments}"
+     $command
+   #+end_src
+
+   The main use for this is as a backend to =emms=, so the fact that
+   we can't play more than one file with this script is /not/ a
+   bug. It's a feature, since =emms= will be the one controlling the
+   order files are played in. We just needed a backend for =emms= to
+   call.

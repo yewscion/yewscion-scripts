@@ -1,0 +1,21 @@
+#!/usr/bin/env -S bash -i 
+case $# in
+    0)
+	echo "This script runs the adlmidi command with the arguments You
+	specify, while accepting them /before/ the file, not just
+	after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
+	;;
+    1)
+	adlmidi $1
+	;;
+    *)
+	file="${@: -1}"
+	arguments=""
+	for i in ${@: 1:$#-1}
+	do
+	    arguments="${arguments} $i"
+	done
+	command="adlmidi ${file} ${arguments}"
+	$command
+	;;
+esac
