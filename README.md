@@ -1,31 +1,29 @@
-# Yewscion Scripts
+     # yewscion-scripts
 
-`Yewscion Scripts` is a collection of utility scripts I maintain for
-my own personal use, in a [literate programming][litr] file.
+     A personal collection of scripts
 
-[litr]: http://www.literateprogramming.com/
+     ## Installation
 
-## Installation
+     Clone this repository and invoke the standard:
 
-For now, installation is manual.
+     ```
+     configure
+     make
+     make install
+     ```
 
-All generated files are in the `exports/` directory, under their
-types.
+     ## Usage
 
-Copy `exports/bin/*` somewhere in Your `$PATH`.
+     Each script will have its own documentation, which can be found under
+     `doc/`.
 
-Copy `exports/man/*` somewhere in Your `$MANPATH` and run `mandb`.
+     ## Contributing
 
-Copy `exports/texi/*` somewhere in Your `$INFOPATH` and run `install-info`.
+     Pull Requests are welcome, as are bugfixes and extensions. Please open
+     issues as needed. If You contribute a feature, needs to be tests and
+     documentation.
 
-## Usage
 
-See relevant documentation. Current scripts include:
+     ## License
 
-- **adlmidi-wrapper**: *Let's EMMS and ADLMidi play well together.*
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+     [AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
