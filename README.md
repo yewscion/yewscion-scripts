@@ -1,29 +1,30 @@
-     # yewscion-scripts
+# yewscion-scripts
 
-     A personal collection of scripts
+A personal collection of scripts
 
-     ## Installation
+## Installation
 
-     Clone this repository and invoke the standard:
+Clone this repository and invoke the standard:
 
-     ```
-     configure
-     make
-     make install
-     ```
+```
+./bootstrap
+configure
+make
+make install
+```
 
-     ## Usage
+## Usage
 
-     Each script will have its own documentation, which can be found under
-     `doc/`.
+Each script will have its own documentation, which can be found under
+`doc/`.
 
-     ## Contributing
+## Contributing
 
-     Pull Requests are welcome, as are bugfixes and extensions. Please open
-     issues as needed. If You contribute a feature, needs to be tests and
-     documentation.
+Pull Requests are welcome, as are bugfixes and extensions. Please open
+issues as needed. If You contribute a feature, needs to be tests and
+documentation.
 
 
-     ## License
+## License
 
-     [AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
+[AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)

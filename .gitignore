@@ -1,88 +1,88 @@
-     # Created by https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
-     # Edit at https://www.toptal.com/developers/gitignore?templates=emacs,linux,commonlisp
+# Created by https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
+# Edit at https://www.toptal.com/developers/gitignore?templates=emacs,linux,commonlisp
 
-     ### CommonLisp ###
-     *.FASL
-     *.fasl
-     *.lisp-temp
-     *.dfsl
-     *.pfsl
-     *.d64fsl
-     *.p64fsl
-     *.lx64fsl
-     *.lx32fsl
-     *.dx64fsl
-     *.dx32fsl
-     *.fx64fsl
-     *.fx32fsl
-     *.sx64fsl
-     *.sx32fsl
-     *.wx64fsl
-     *.wx32fsl
+### CommonLisp ###
+*.FASL
+*.fasl
+*.lisp-temp
+*.dfsl
+*.pfsl
+*.d64fsl
+*.p64fsl
+*.lx64fsl
+*.lx32fsl
+*.dx64fsl
+*.dx32fsl
+*.fx64fsl
+*.fx32fsl
+*.sx64fsl
+*.sx32fsl
+*.wx64fsl
+*.wx32fsl
 
-     ### Emacs ###
-     # -*-mode: gitignore; -*-
-     *~
-     \#*\#
-     /.emacs.desktop
-     /.emacs.desktop.lock
-     *.elc
-     auto-save-list
-     tramp
-     .\#*
+### Emacs ###
+# -*-mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
 
-     # Org-mode
-     .org-id-locations
-     *_archive
+# Org-mode
+.org-id-locations
+*_archive
 
-     # flymake-mode
-     *_flymake.*
+# flymake-mode
+*_flymake.*
 
-     # eshell files
-     /eshell/history
-     /eshell/lastdir
+# eshell files
+/eshell/history
+/eshell/lastdir
 
-     # elpa packages
-     /elpa/
+# elpa packages
+/elpa/
 
-     # reftex files
-     *.rel
+# reftex files
+*.rel
 
-     # AUCTeX auto folder
-     /auto/
+# AUCTeX auto folder
+/auto/
 
-     # cask packages
-     .cask/
-     dist/
+# cask packages
+.cask/
+dist/
 
-     # Flycheck
-     flycheck_*.el
+# Flycheck
+flycheck_*.el
 
-     # server auth directory
-     /server/
+# server auth directory
+/server/
 
-     # projectiles files
-     .projectile
+# projectiles files
+.projectile
 
-     # directory configuration
-     .dir-locals.el
+# directory configuration
+.dir-locals.el
 
-     # network security
-     /network-security.data
+# network security
+/network-security.data
 
 
-     ### Linux ###
+### Linux ###
 
-     # temporary files which can be createdif a process still has a handle open of a deleted file
-     .fuse_hidden*
+# temporary files which can be createdif a process still has a handle open of a deleted file
+.fuse_hidden*
 
-     # KDE directory preferences
-     .directory
+# KDE directory preferences
+.directory
 
-     # Linux trash folder which might appear on any partition or disk
-     .Trash-*
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
-     # .nfs files are created when an open file is removed but is still being accessed
-     .nfs*
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
-     # End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
+# End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp

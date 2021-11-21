@@ -50,35 +50,36 @@
    documentation.
 
    #+begin_src markdown :tangle "README.md" :eval never
-     # yewscion-scripts
+# yewscion-scripts
 
-     A personal collection of scripts
+A personal collection of scripts
 
-     ## Installation
+## Installation
 
-     Clone this repository and invoke the standard:
+Clone this repository and invoke the standard:
 
-     ```
-     configure
-     make
-     make install
-     ```
+```
+./bootstrap
+configure
+make
+make install
+```
 
-     ## Usage
+## Usage
 
-     Each script will have its own documentation, which can be found under
-     `doc/`.
+Each script will have its own documentation, which can be found under
+`doc/`.
 
-     ## Contributing
+## Contributing
 
-     Pull Requests are welcome, as are bugfixes and extensions. Please open
-     issues as needed. If You contribute a feature, needs to be tests and
-     documentation.
+Pull Requests are welcome, as are bugfixes and extensions. Please open
+issues as needed. If You contribute a feature, needs to be tests and
+documentation.
 
 
-     ## License
+## License
 
-     [AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
+[AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
 
   #+end_src
 ** LICENSE
@@ -765,26 +766,26 @@
    [[https://sr.ht/][Sourcehut]] repository commits, as that is the main place I will be
    uploading the source to share.
    #+begin_src markdown :tangle Changelog.md
-     # Changelog
-     All notable changes to this project will be documented in this file.
+# Changelog
+All notable changes to this project will be documented in this file.
 
-     The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-     and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-     ## [Unreleased]
-     ### Added
-        - `adlmidi-wrapper` - allows standard calling of program with
-          options, so it can easily work with EMMS.
-        - `push-all-git-repos` - a scheme library to push all git
-          repositories in a specific directory. Has a wrapper in `pagr.scm`
-        - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE, .gitignore)
-        - Autotools setup
-     ### Changed
-        - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`
-     ### Removed
-        - Obsolete `pagr.sh` wrapper script for `push-all-git-repos`
+## [Unreleased]
+### Added
+    - `adlmidi-wrapper` - allows standard calling of program with
+      options, so it can easily work with EMMS.
+    - `push-all-git-repos` - a scheme library to push all git
+      repositories in a specific directory. Has a wrapper in `pagr.scm`
+    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE, .gitignore)
+    - Autotools setup
+### Changed
+    - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`
+### Removed
+    - Obsolete `pagr.sh` wrapper script for `push-all-git-repos`
 
-     [Unreleased]: https://git.sr.ht/~yewscion/yewscion-scripts/log
+[Unreleased]: https://git.sr.ht/~yewscion/yewscion-scripts/log
    #+end_src
 ** AUTHORS
    If You contribute to this repo, Your information belongs in this
@@ -793,12 +794,12 @@
    happy to accept that.
 
    #+begin_src text :tangle "AUTHORS"
-     # This is the list of the Acreid project's significant contributors.
-     #
-     # This does not necessarily list everyone who has contributed code.
-     # To see the full list of contributors, see the revision history in
-     # source control.
-     Christopher Rodriguez <yewscion@gmail.com>
+# This is the list of the Acreid project's significant contributors.
+#
+# This does not necessarily list everyone who has contributed code.
+# To see the full list of contributors, see the revision history in
+# source control.
+Christopher Rodriguez <yewscion@gmail.com>
    #+end_src
 ** .gitignore
    This is an important file for any git repository. I generate mine
@@ -806,94 +807,94 @@
    on the project.
 
    #+begin_src conf :tangle ".gitignore"
-     # Created by https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
-     # Edit at https://www.toptal.com/developers/gitignore?templates=emacs,linux,commonlisp
+# Created by https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
+# Edit at https://www.toptal.com/developers/gitignore?templates=emacs,linux,commonlisp
 
-     ### CommonLisp ###
-     ,*.FASL
-     ,*.fasl
-     ,*.lisp-temp
-     ,*.dfsl
-     ,*.pfsl
-     ,*.d64fsl
-     ,*.p64fsl
-     ,*.lx64fsl
-     ,*.lx32fsl
-     ,*.dx64fsl
-     ,*.dx32fsl
-     ,*.fx64fsl
-     ,*.fx32fsl
-     ,*.sx64fsl
-     ,*.sx32fsl
-     ,*.wx64fsl
-     ,*.wx32fsl
+### CommonLisp ###
+,*.FASL
+,*.fasl
+,*.lisp-temp
+,*.dfsl
+,*.pfsl
+,*.d64fsl
+,*.p64fsl
+,*.lx64fsl
+,*.lx32fsl
+,*.dx64fsl
+,*.dx32fsl
+,*.fx64fsl
+,*.fx32fsl
+,*.sx64fsl
+,*.sx32fsl
+,*.wx64fsl
+,*.wx32fsl
 
-     ### Emacs ###
-     # -*-mode: gitignore; -*-
-     ,*~
-     \#*\#
-     /.emacs.desktop
-     /.emacs.desktop.lock
-     ,*.elc
-     auto-save-list
-     tramp
-     .\#*
+### Emacs ###
+# -*-mode: gitignore; -*-
+,*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+,*.elc
+auto-save-list
+tramp
+.\#*
 
-     # Org-mode
-     .org-id-locations
-     ,*_archive
+# Org-mode
+.org-id-locations
+,*_archive
 
-     # flymake-mode
-     ,*_flymake.*
+# flymake-mode
+,*_flymake.*
 
-     # eshell files
-     /eshell/history
-     /eshell/lastdir
+# eshell files
+/eshell/history
+/eshell/lastdir
 
-     # elpa packages
-     /elpa/
+# elpa packages
+/elpa/
 
-     # reftex files
-     ,*.rel
+# reftex files
+,*.rel
 
-     # AUCTeX auto folder
-     /auto/
+# AUCTeX auto folder
+/auto/
 
-     # cask packages
-     .cask/
-     dist/
+# cask packages
+.cask/
+dist/
 
-     # Flycheck
-     flycheck_*.el
+# Flycheck
+flycheck_*.el
 
-     # server auth directory
-     /server/
+# server auth directory
+/server/
 
-     # projectiles files
-     .projectile
+# projectiles files
+.projectile
 
-     # directory configuration
-     .dir-locals.el
+# directory configuration
+.dir-locals.el
 
-     # network security
-     /network-security.data
+# network security
+/network-security.data
 
 
-     ### Linux ###
+### Linux ###
 
-     # temporary files which can be createdif a process still has a handle open of a deleted file
-     .fuse_hidden*
+# temporary files which can be createdif a process still has a handle open of a deleted file
+.fuse_hidden*
 
-     # KDE directory preferences
-     .directory
+# KDE directory preferences
+.directory
 
-     # Linux trash folder which might appear on any partition or disk
-     .Trash-*
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
-     # .nfs files are created when an open file is removed but is still being accessed
-     .nfs*
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
-     # End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
+# End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
 
 
    #+end_src
@@ -1071,60 +1072,60 @@ SUFFIXES = .scm .go
   First, we need to ensure all the tools I'll be using are available
   to me.
   #+begin_src scheme :eval yes :results output
-    (use-modules (ice-9 ftw))
+(use-modules (ice-9 ftw))
   #+end_src
 
   Then, we'll need to define some functions to do our heavy lifting
   for us.
 
   #+begin_src scheme
-    (define (directory->list directory)
-      "Returns a list containing the names of each file in the given directory."
-      (map
-       (lambda (x)
-         (string-append directory "/" x))
-       (map
-        car
-        (cddr (file-system-tree directory)))))
-    (define (repository? directory)
-      "Tests to see if the given directory is a git repository."
-      (member (string-append directory "/.git") (directory->list directory)))
-    (define (find-git-repos directory)
-      "Returns a list of all git repositories currently inside of DIRECTORY."
-      (filter repository? (directory->list directory)))
-    (define (push-git-repo repository remote)
-      "Calls system's git to push REPOSITORY to REMOTE."
-      (narrate-directory-push repository)
-      (display (string-append "git -C " repository " push " remote " trunk\n"))
-      (system (string-append "git -C " repository " push " remote " trunk")))
+(define (directory->list directory)
+  "Returns a list containing the names of each file in the given directory."
+  (map
+   (lambda (x)
+     (string-append directory "/" x))
+   (map
+    car
+    (cddr (file-system-tree directory)))))
+(define (repository? directory)
+  "Tests to see if the given directory is a git repository."
+  (member (string-append directory "/.git") (directory->list directory)))
+(define (find-git-repos directory)
+  "Returns a list of all git repositories currently inside of DIRECTORY."
+  (filter repository? (directory->list directory)))
+(define (push-git-repo repository remote)
+  "Calls system's git to push REPOSITORY to REMOTE."
+  (narrate-directory-push repository)
+  (display (string-append "git -C " repository " push " remote " trunk\n"))
+  (system (string-append "git -C " repository " push " remote " trunk")))
   #+end_src
 
   With those defined, we'll need to begin work on the stuff that will
   be displayed to the user.
 
   #+begin_src scheme
-    (define (greet-the-user)
-      "Display a greeting to the user."
-      (display "Beginning push of all git repos in ~/Documents now!\n"))
-    (define (narrate-directory-push directory)
-      "Tell the user we are pushing the given DIRECTORY"
-      (display (string-append "Pushing " directory " now!\n")))
-    (define (farewell-the-user)
-      "Bid the user farewell."
-      (display "All directories pushed!\n"))
+(define (greet-the-user)
+  "Display a greeting to the user."
+  (display "Beginning push of all git repos in ~/Documents now!\n"))
+(define (narrate-directory-push directory)
+  "Tell the user we are pushing the given DIRECTORY"
+  (display (string-append "Pushing " directory " now!\n")))
+(define (farewell-the-user)
+  "Bid the user farewell."
+  (display "All directories pushed!\n"))
   #+end_src
 
   Finally, to tie it all together, we'll build one big function.
 
   #+begin_src scheme
-    (define (push-all-git-repos directory remote)
-      "Pushes all Git Repositories inside of DIRECTORY"
-      (greet-the-user)
-      (map
-       (lambda (repo)
-         (push-git-repo repo remote))
-       (find-git-repos directory))
-      (farewell-the-user))
+(define (push-all-git-repos directory remote)
+  "Pushes all Git Repositories inside of DIRECTORY"
+  (greet-the-user)
+  (map
+   (lambda (repo)
+     (push-git-repo repo remote))
+   (find-git-repos directory))
+  (farewell-the-user))
   #+end_src
 
   And to add it to our =$PATH=, we'll need to make a script that calls
