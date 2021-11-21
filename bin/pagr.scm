@@ -1,4 +1,4 @@
-#!/usr/bin/env -S guile \
+#!/usr/bin/env -S guile -e main -s
 -e main -s
 !#
 (use-modules (push-all-git-repos))

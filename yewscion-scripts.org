@@ -906,12 +906,12 @@ autoreconf --verbose --install --force
 ** configure.ac
    #+begin_src autoconf :tangle configure.ac
 dnl Process this file with autoconf
-AC_INIT([yewscion-scripts], [0.0.0], [yewscion@gmail.com], [yewscion-scripts-0.0.0.tar.gz], [https://sr.ht/~yewscion/yewscion-scripts/])
+AC_INIT([yewscion-scripts], [0.1.0], [yewscion@gmail.com], [yewscion-scripts-0.1.0.tar.gz], [https://sr.ht/~yewscion/yewscion-scripts/])
 AC_CONFIG_SRCDIR([yewscion-scripts.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
-GUILE_PKG
+GUILE_PKG([3.0])
 GUILE_PROGS
 if test "x$GUILD" = "x"; then
    AC_MSG_ERROR(['guild' binary not found; please check Your guile installation.])
@@ -924,22 +924,31 @@ AC_OUTPUT
    #+begin_src makefile-automake :tangle Makefile.am
 include guile.am
 
-SOURCES =				 \
+SOURCES =				\
 push-all-git-repos.scm
 
-EXTRA_DIST =					\
+EXTRA_DIST =				\
 README.md				\
 bootstrap				\
 pre-inst-env.in				\
-bin/pagr.scm
+bin/pagr.scm				\
+bin/adlmidi-wrapper.scm
 
-bin_SCRIPTS = pagr
+bin_SCRIPTS =				\
+pagr					\
+adlmidi-wrapper
 
 pagr: bin/pagr.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile ,\#!$(GUILE) ,g' < bin/pagr.scm > ./pagr
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/pagr.scm > ./pagr
 	chmod +x pagr
+adlmidi-wrapper: bin/adlmidi-wrapper.scm
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
+	chmod +x adlmidi-wrapper
 push-all-git-repos.scm:
-	cat < share/guile/push-all-git-repos.scm > push-all-git-repos.scm
+	cat < $(srcdir)/share/guile/push-all-git-repos.scm > push-all-git-repos.scm
+
+clean-local:
+	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper *~
    #+end_src
 ** guile.am
    #+begin_src makefile-automake :tangle guile.am
@@ -1001,66 +1010,47 @@ SUFFIXES = .scm .go
    feeds them to =adlmidi= the way that it expects. So everyone is
    happy.
 
-   #+begin_src bash :tangle bin/adlmidi-wrapper
-     #!/usr/bin/env -S bash -i 
-     case $# in
-	 0)
-	     <<zero-args>>
-	     ;;
-	 1)
-	     <<one-arg>>
-	     ;;
-	 ,*)
-	     <<many-args>>
-	     ;;
-     esac
-     
-   #+end_src
+#+begin_src scheme :tangle bin/adlmidi-wrapper.scm
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
+(use-modules (srfi srfi-1))
+(define (main args)
+  (let ((arguments (cdr args)))
+    (cond ((= (length arguments) 0)
+           (display (string-append
+                     "Usage: adlmidi-wrapper [ARGUMENTS] MIDIFILE\n\n"
 
-   We'll need to define some cases here. First, the case of someone
-   just calling the script with no arguments. We'll display some
-   (nominally) helpful text, that will instruct them to call the
-   script as expected.
-   
-   #+name: zero-args
-   #+begin_src bash :eval never :tangle no
-     echo "This script runs the adlmidi command with the arguments You
-     specify, while accepting them /before/ the file, not just
-     after. Usage: adlmidi-wrapper <OPTIONS> <FILE>."
-   #+end_src
+                     "Explanation of Arguments:\n\n"
 
-   With one argument, we'll assumed that the user has supplied a file
-   to play. This will just pass it along to =adlmidi= in that case,
-   then.
-   
-   #+name: one-arg
-   #+begin_src bash :eval never :tangle no
-     adlmidi $1
-   #+end_src
+                     "  FILE:        The MIDI file You want to play using\n"
+                     "               adlmidi.\n"
+                     "  [ARGUMENTS]: An optional list of arguments to adlmidi\n"
+                     "               itself, which would normally go at the\n"
+                     "               end of the command.\n\n"
 
-   With more than one arguments, we're going to assume /everything/
-   aside from the script name and last argument are options the user
-   has specified. We'll isolate the filename, then build a string of
-   all of the arguments delimited by a space. Finally, we'll build a
-   new call to =adlmidi= in the way it expects us to, and then run it.
+                     "This program is entirely written in GNU Guile Scheme,\n"
+                     "and You are welcome to change it how You see fit.\n\n"
 
-   #+name: many-args
-   #+begin_src bash :eval never :tangle no
-     file="${@: -1}"
-     arguments=""
-     for i in ${@: 1:$#-1}
-     do
-	 arguments="${arguments} $i"
-     done
-     command="adlmidi ${file} ${arguments}"
-     $command
-   #+end_src
-
-   The main use for this is as a backend to =emms=, so the fact that
-   we can't play more than one file with this script is /not/ a
-   bug. It's a feature, since =emms= will be the one controlling the
-   order files are played in. We just needed a backend for =emms= to
-   call.
+                     "Guile Online Help: <https://www.gnu.org/software/guile/>\n"
+                     "Local Online Help: 'info guile'\n")))
+          ((= (length arguments) 1)
+           (system (string-append "adlmidi " (car arguments)))
+           (system "reset"))
+          (else
+           (let ((systemcall (string-append "adlmidi "
+                                            (last arguments)
+                                            " "
+                                            (reduce
+                                             (lambda (x y)
+                                               (string-append y " " x))
+                                             ""
+                                             (drop-right arguments 1)))))
+             (display systemcall)
+             (newline)
+             (system systemcall)
+             (system "reset"))))))
+#+end_src
 * Guile
 ** Push All Git Repos
    :PROPERTIES:
@@ -1137,7 +1127,7 @@ SUFFIXES = .scm .go
   this library.
 
   #+begin_src scheme :tangle bin/pagr.scm :eval never
-#!/usr/bin/env -S guile \
+#!/usr/bin/env -S guile -e main -s
 -e main -s
 !#
 (use-modules (push-all-git-repos))
