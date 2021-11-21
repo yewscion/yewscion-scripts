@@ -3,7 +3,7 @@
 !#
 (use-modules (pagr))
 (define (main args)
-  (let ((arguments (cdr args)))
+  (let ((arguments (ocdr args)))
     (cond ((not (equal? (length arguments) 2))
            (display (string-append
                      "Usage: pagr.scm DIRECTORY REMOTE\n\n"
@@ -23,4 +23,4 @@
                      "Local Online Help: 'info guile'\n")))
           ((not (file-exists? (car arguments)))
            (format #t "ERROR: ~a does not exist!~%" (car arguments)))
-          (else (pagr:push-all-git-repos (car arguments) (cadr arguments))))))
+          (else (push-all-git-repos (car arguments) (cadr arguments))))))
