@@ -942,8 +942,8 @@ pagr: bin/pagr.scm
    #+end_src
 ** guile.am
    #+begin_src makefile-automake :tangle guile.am
-moddir=$(datadir)/guile/site/$(GUILE_EFFECTIVE_VERSION)
-godir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
+moddir = $(datadir)/guile/site/$(GUILE_EFFECTIVE_VERSION)
+godir = $(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 
