@@ -1,7 +1,7 @@
 #!/usr/bin/env -S guile \
 -e main -s
 !#
-(use-modules (pagr))
+(use-modules (push-all-git-repos))
 (define (main args)
   (let ((arguments (ocdr args)))
     (cond ((not (equal? (length arguments) 2))

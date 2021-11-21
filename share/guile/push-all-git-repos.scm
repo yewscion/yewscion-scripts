@@ -1,4 +1,4 @@
-(define-module (pagr)
+(define-module (push-all-git-repos)
   :use-module (ice-9 ftw)
   :export (push-all-git-repos))
 
