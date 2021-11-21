@@ -1,7 +1,7 @@
 #!/usr/bin/env -S guile \
 -e main -s
 !#
-(load "share/guile/push-all-git-repos.scm")
+(use-modules (pagr))
 (define (main args)
   (let ((arguments (cdr args)))
     (cond ((not (equal? (length arguments) 2))
@@ -23,4 +23,4 @@
                      "Local Online Help: 'info guile'\n")))
           ((not (file-exists? (car arguments)))
            (format #t "ERROR: ~a does not exist!~%" (car arguments)))
-          (else (push-all-git-repos (car arguments) (cadr arguments))))))
+          (else (pagr:push-all-git-repos (car arguments) (cadr arguments))))))

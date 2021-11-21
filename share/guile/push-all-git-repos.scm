@@ -1,4 +1,6 @@
-(use-modules (ice-9 ftw))
+(define-module (pagr)
+  :use-module (ice-9 ftw)
+  :export (push-all-git-repos))
 
 (define (directory->list directory)
   "Returns a list containing the names of each file in the given directory."
