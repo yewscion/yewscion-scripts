@@ -3,7 +3,7 @@
 !#
 (use-modules (push-all-git-repos))
 (define (main args)
-  (let ((arguments (ocdr args)))
+  (let ((arguments (cdr args)))
     (cond ((not (equal? (length arguments) 2))
            (display (string-append
                      "Usage: pagr.scm DIRECTORY REMOTE\n\n"
