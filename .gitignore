@@ -86,3 +86,10 @@ flycheck_*.el
 .nfs*
 
 # End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
+
+/Makefile.in
+/aclocal.m4
+/autom4te.cache/
+/bin/pagr.go
+/build-aux/
+/configure

@@ -11,7 +11,7 @@
 #+select_tags: export
 #+exclude_tags: noexport
 #+creator: Emacs 28.0.50 (Org mode 9.4.6)
-#+texinfo_filename: ./export/texi/yewscion-scripts.info
+#+texinfo_filename: doc/texi/yewscion-scripts.info
 #+texinfo_class: info
 #+texinfo_header:
 #+texinfo_post_header:
@@ -21,9 +21,9 @@
 #+texinfo_dir_title: Yewscion's Scripts: (yewscion-scripts)
 #+texinfo_dir_desc: Small Utility Shell Scripts
 #+texinfo_printed_title: Yewscion's Scripts
-#+man_filename: ./man/yewscion-scripts.man
+#+man_filename: doc/yewscion-scripts.man
 #+property: header-args bash :eval never :mkdirp yes :noweb yes :comments no
-#+property: header-args scheme :eval yes :mkdirp yes :noweb yes :session GUILESESSION
+#+property: header-args scheme :eval never :mkdirp yes :noweb yes :session GUILESESSION
 * Concept
   This is a literate programming filemade to support the yewscion-scripts project.
 
@@ -774,18 +774,28 @@ and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+    - `ssh-wrapper` - allows system-ssh to easily be called when
+      also using Guix Binary SSH.
+### Changed
+    - Updated this changelog to reflect progress post-0.1.0 release.
+### Removed
+    - Nothing.
+
+## [0.1.0]
+### Added
     - `adlmidi-wrapper` - allows standard calling of program with
       options, so it can easily work with EMMS.
     - `push-all-git-repos` - a scheme library to push all git
-      repositories in a specific directory. Has a wrapper in `pagr.scm`
-    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE, .gitignore)
-    - Autotools setup
+      repositories in a specific directory. Has a wrapper in `pagr.scm`.
+    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE, .gitignore).
+    - Autotools setup.
 ### Changed
-    - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`
+    - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`.
 ### Removed
-    - Obsolete `pagr.sh` wrapper script for `push-all-git-repos`
+    - Obsolete `pagr.sh` wrapper script for `push-all-git-repos`.
 
 [Unreleased]: https://git.sr.ht/~yewscion/yewscion-scripts/log
+[0.1.0]: https://git.sr.ht/~yewscion/yewscion-scripts/refs/0.1.0
    #+end_src
 ** AUTHORS
    If You contribute to this repo, Your information belongs in this
@@ -896,7 +906,12 @@ flycheck_*.el
 
 # End of https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
 
-
+/Makefile.in
+/aclocal.m4
+/autom4te.cache/
+/bin/pagr.go
+/build-aux/
+/configure
    #+end_src
 * Autotools Project Files
 ** bootstrap
@@ -932,11 +947,13 @@ README.md				\
 bootstrap				\
 pre-inst-env.in				\
 bin/pagr.scm				\
-bin/adlmidi-wrapper.scm
+bin/adlmidi-wrapper.scm			\
+bin/ssh-wrapper.scm
 
 bin_SCRIPTS =				\
 pagr					\
-adlmidi-wrapper
+adlmidi-wrapper				\
+ssh-wrapper
 
 pagr: bin/pagr.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/pagr.scm > ./pagr
@@ -944,11 +961,14 @@ pagr: bin/pagr.scm
 adlmidi-wrapper: bin/adlmidi-wrapper.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
 	chmod +x adlmidi-wrapper
+ssh-wrapper: bin/ssh-wrapper.scm
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/ssh-wrapper.scm > ./ssh-wrapper
+	chmod +x ssh-wrapper
 push-all-git-repos.scm:
 	cat < $(srcdir)/share/guile/push-all-git-repos.scm > push-all-git-repos.scm
 
 clean-local:
-	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper *~
+	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper ssh-wrapper *~
    #+end_src
 ** guile.am
    #+begin_src makefile-automake :tangle guile.am
@@ -1051,7 +1071,52 @@ SUFFIXES = .scm .go
              (system systemcall)
              (system "reset"))))))
 #+end_src
-* Guile
+** System SSH
+#+begin_src scheme :tangle bin/ssh-wrapper.scm
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
+(use-modules (srfi srfi-1))
+(define (main args)
+  (let ((arguments (cdr args)))
+    (cond ((= (length arguments) 0)
+           (display (string-append
+                     "Usage: ssh-wrapper [ARGUMENTS] HOST\n\n"
+
+                     "The main use for this tool is allowing You to fall\n"
+                     "back to the system-installed SSH client when using\n"
+                     "a GNU Guix Binary Install.\n\n"
+                     "Explanation of Arguments:\n\n"
+
+                     "  HOST:        The host You are trying to SSH into.\n"
+                     "  [ARGUMENTS]: An optional list of arguments to ssh\n"
+                     "               command.\n\n"
+
+                     "This program is entirely written in GNU Guile Scheme,\n"
+                     "and You are welcome to change it how You see fit.\n\n"
+
+                     "Guile Online Help: <https://www.gnu.org/software/guile/>\n"
+                     "Local Online Help: 'info guile'\n")))
+          ((= (length arguments) 1)
+           (system (string-append "/usr/bin/ssh " (car arguments)))
+           (system "reset"))
+          (else
+           (let ((systemcall (string-append "/usr/bin/ssh "
+                                            (last arguments)
+                                            " "
+                                            (reduce
+                                             (lambda (x y)
+                                               (string-append y " " x))
+                                             ""
+                                             (drop-right arguments 1)))))
+             (display systemcall)
+             (newline)
+             (system systemcall)
+             (system "reset"))))))
+
+
+#+end_src
+* Repetitive Tasks
 ** Push All Git Repos
    :PROPERTIES:
   :header-args: :tangle share/guile/push-all-git-repos.scm :mkdirp yes
@@ -1159,7 +1224,7 @@ SUFFIXES = .scm .go
 
 * Links                                                            :noexport:
 ** Export Docs
-   #+begin_src elisp
+   #+begin_src elisp :eval yes
      (org-texinfo-export-to-info)
      (org-man-export-to-man)
      (org-html-export-to-html)
