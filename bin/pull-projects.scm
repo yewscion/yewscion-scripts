@@ -1,3 +1,6 @@
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
 (define-module (pull-all-projects)
   :use-module (ice-9 ftw)
   :use-module (srfi srfi-1)
