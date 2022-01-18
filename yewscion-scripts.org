@@ -971,6 +971,8 @@ pull-projects: bin/pull-projects.scm
 	chmod +x pull-projects
 push-all-git-repos.scm:
 	cat < $(srcdir)/share/guile/push-all-git-repos.scm > push-all-git-repos.scm
+pull-projects.scm:
+	cat < $(srcdir)/share/guile/pull-projects.scm > pull-projects.scm
 
 clean-local:
 	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper ssh-wrapper pull-projects *~
