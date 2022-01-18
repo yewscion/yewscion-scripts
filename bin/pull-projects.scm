@@ -84,4 +84,5 @@
      projects)
     (farewell-the-user host dest-dir)))
 
-(pull-all-projects "Documents" "git" "cdr255.com" "yewscion" "git" projects)
+(define (main args)
+  (pull-all-projects "Documents" "git" "cdr255.com" "yewscion" "git" projects))
