@@ -949,7 +949,8 @@ pre-inst-env.in				\
 bin/pagr.scm				\
 bin/adlmidi-wrapper.scm			\
 bin/ssh-wrapper.scm                     \
-bin/pull-projects.scm
+bin/pull-projects.scm                   \
+pull-projects.scm
 
 bin_SCRIPTS =				\
 pagr					\
