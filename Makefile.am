@@ -1,7 +1,8 @@
 include guile.am
 
 SOURCES =				\
-push-all-git-repos.scm
+push-all-git-repos.scm                  \
+pull-projects.scm
 
 EXTRA_DIST =				\
 README.md				\
