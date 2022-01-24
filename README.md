@@ -15,14 +15,12 @@ make install
 
 ## Usage
 
-Each script will have its own documentation, which can be found under
-`doc/`.
+Each script will have its own documentation, which can be found under `doc/`.
 
 ## Contributing
 
-Pull Requests are welcome, as are bugfixes and extensions. Please open
-issues as needed. If You contribute a feature, needs to be tests and
-documentation.
+Pull Requests are welcome, as are bugfixes and extensions. Please open issues as
+needed. If You contribute a feature, needs to be tests and documentation.
 
 
 ## License

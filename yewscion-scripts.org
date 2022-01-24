@@ -23,33 +23,30 @@
 #+texinfo_printed_title: Yewscion's Scripts
 #+man_filename: doc/yewscion-scripts.man
 #+property: header-args bash :eval never :mkdirp yes :noweb yes :comments no
-#+property: header-args scheme :eval never :mkdirp yes :noweb yes :session GUILESESSION
+#+property: header-args scheme :eval never :mkdirp yes :noweb yes :session GUILE
 * Concept
-  This is a literate programming filemade to support the yewscion-scripts project.
+This is a literate programming filemade to support the yewscion-scripts project.
 
-  This section is reserved for a high-level abstract description of what the
-  project is. In particular, the overview should walk through the program flow
-  as much as possible, to ensure clarity of thought before code work begins.
+This section is reserved for a high-level abstract description of what the
+project is. In particular, the overview should walk through the program flow as
+much as possible, to ensure clarity of thought before code work begins.
 
-  This is basically a collection of bash/guile scripts that I made to
-  solve small (mostly sysadmin-like) problems I run into. Nothing
-  serious or important, and anything that gets too big should probably
-  move out into its own repo.
+This is basically a collection of bash/guile scripts that I made to solve small
+(mostly sysadmin-like) problems I run into. Nothing serious or important, and
+anything that gets too big should probably move out into its own repo.
 ** Overview
-   This space intentionally left blank.
+This space intentionally left blank.
 * Generic Project Files
-  These files exist in every repository, or should, anyway. As this is
-  a literate programming file, however, they are also included
-  here. While they can mostly stand for themselves, I will add a
-  sentence or two about each, as well as any deviations in this
-  specific repo.
+These files exist in every repository, or should, anyway. As this is a literate
+programming file, however, they are also included here. While they can mostly
+stand for themselves, I will add a sentence or two about each, as well as any
+deviations in this specific repo.
 ** README
-   This is the all-important gateway into the repository. I follow
-   [[https://www.makeareadme.com/][Make a README]]'s specification in all of my projects, as I think
-   it is important to standardize such an outward-facing part of the
-   documentation.
+This is the all-important gateway into the repository. I follow [[https://www.makeareadme.com/][Make a README]]'s
+specification in all of my projects, as I think it is important to standardize
+such an outward-facing part of the documentation.
 
-   #+begin_src markdown :tangle "README.md" :eval never
+#+begin_src markdown :tangle "README.md" :eval never
 # yewscion-scripts
 
 A personal collection of scripts
@@ -67,32 +64,29 @@ make install
 
 ## Usage
 
-Each script will have its own documentation, which can be found under
-`doc/`.
+Each script will have its own documentation, which can be found under `doc/`.
 
 ## Contributing
 
-Pull Requests are welcome, as are bugfixes and extensions. Please open
-issues as needed. If You contribute a feature, needs to be tests and
-documentation.
+Pull Requests are welcome, as are bugfixes and extensions. Please open issues as
+needed. If You contribute a feature, needs to be tests and documentation.
 
 
 ## License
 
 [AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
 
-  #+end_src
+#+end_src
+
 ** LICENSE
-   I am a huge supporter of [[https://en.wikipedia.org/wiki/Free_software][Free Software]], and as such generally use
-   licenses to support that stance.
+I am a huge supporter of [[https://en.wikipedia.org/wiki/Free_software][Free Software]], and as such generally use licenses to
+support that stance.
 
-   I want to avoid my code being locked away into something someone
-   else is doing, but I also want to allow others to benefit from my
-   work without obligation on their part to subscribe to my beliefs. I
-   use the [[https://www.gnu.org/licenses/agpl-3.0.en.html][GNU Affero General Public License]] for most of my work
-   because of this. However, if You want to debate licenses, I am open
-   to a casual, friendly discussion.
-
+I want to avoid my code being locked away into something someone else is doing,
+but I also want to allow others to benefit from my work without obligation on
+their part to subscribe to my beliefs. I use the [[https://www.gnu.org/licenses/agpl-3.0.en.html][GNU Affero General Public
+License]] for most of my work because of this. However, if You want to debate
+licenses, I am open to a casual, friendly discussion.
 
 #+begin_src text :tangle "LICENSE" :eval never
                       GNU AFFERO GENERAL PUBLIC LICENSE
@@ -756,26 +750,30 @@ documentation.
   if any, to sign a "copyright disclaimer" for the program, if necessary.
   For more information on this, and how to apply and follow the GNU AGPL, see
   <https://www.gnu.org/licenses/>.
-   #+end_src
-** Changelog
-   All updates to this repository should be logged here. I follow [[https://keepachangelog.com/][Keep
-   a Changelog]]'s recommendations here, because again, standardization
-   is importantfor outward-facing documentation.
+#+end_src
 
-   It's worth noting here that I will keep the links updated to the
-   [[https://sr.ht/][Sourcehut]] repository commits, as that is the main place I will be
-   uploading the source to share.
-   #+begin_src markdown :tangle Changelog.md
+** Changelog
+All updates to this repository should be logged here. I follow [[https://keepachangelog.com/][Keep a
+Changelog]]'s recommendations here, because again, standardization is importantfor
+outward-facing documentation.
+
+It's worth noting here that I will keep the links updated to the [[https://sr.ht/][Sourcehut]]
+repository commits, as that is the main place I will be uploading the source to
+share.
+
+#+begin_src markdown :tangle Changelog.md
 # Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic
+Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 ### Added
-    - `ssh-wrapper` - allows system-ssh to easily be called when
-      also using Guix Binary SSH.
+    - `ssh-wrapper` - Allows system-ssh to easily be called when also using Guix
+      Binary SSH.
+    - `pull-projects` - Quickly pull down all projects from my personal server.
 ### Changed
     - Updated this changelog to reflect progress post-0.1.0 release.
 ### Removed
@@ -783,11 +781,12 @@ and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [0.1.0]
 ### Added
-    - `adlmidi-wrapper` - allows standard calling of program with
-      options, so it can easily work with EMMS.
-    - `push-all-git-repos` - a scheme library to push all git
-      repositories in a specific directory. Has a wrapper in `pagr.scm`.
-    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE, .gitignore).
+    - `adlmidi-wrapper` - allows standard calling of program with options, so it
+      can easily work with EMMS.
+    - `push-all-git-repos` - a scheme library to push all git repositories in a
+      specific directory. Has a wrapper in `pagr.scm`.
+    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE,
+      .gitignore).
     - Autotools setup.
 ### Changed
     - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`.
@@ -796,27 +795,26 @@ and this projectadheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 [Unreleased]: https://git.sr.ht/~yewscion/yewscion-scripts/log
 [0.1.0]: https://git.sr.ht/~yewscion/yewscion-scripts/refs/0.1.0
-   #+end_src
-** AUTHORS
-   If You contribute to this repo, Your information belongs in this
-   file. I will attempt to ensure this, but if You'd like to simply
-   include Your information here in any pull requests, I am more than
-   happy to accept that.
+#+end_src
 
-   #+begin_src text :tangle "AUTHORS"
+** AUTHORS
+If You contribute to this repo, Your information belongs in this file. I will
+attempt to ensure this, but if You'd like to simply include Your information
+here in any pull requests, I am more than happy to accept that.
+
+#+begin_src text :tangle "AUTHORS"
 # This is the list of the Acreid project's significant contributors.
 #
-# This does not necessarily list everyone who has contributed code.
-# To see the full list of contributors, see the revision history in
-# source control.
+# This does not necessarily list everyone who has contributed code.  To see the
+# full list of contributors, see the revision history in source control.
 Christopher Rodriguez <yewscion@gmail.com>
-   #+end_src
-** .gitignore
-   This is an important file for any git repository. I generate mine
-   using [[https://www.toptal.com/developers/gitignore][gitignore.io]] right now, and add to it as neededduring work
-   on the project.
+#+end_src
 
-   #+begin_src conf :tangle ".gitignore"
+** .gitignore
+This is an important file for any git repository. I generate mine using
+[[https://www.toptal.com/developers/gitignore][gitignore.io]] right now, and add to it as needed during work on the project.
+
+#+begin_src conf :tangle .gitignore
 # Created by https://www.toptal.com/developers/gitignore/api/emacs,linux,commonlisp
 # Edit at https://www.toptal.com/developers/gitignore?templates=emacs,linux,commonlisp
 
@@ -912,16 +910,24 @@ flycheck_*.el
 /bin/pagr.go
 /build-aux/
 /configure
-   #+end_src
+#+end_src
+
 * Autotools Project Files
 ** bootstrap
-   #+begin_src bash :tangle bootstrap :shebang #! /bin/sh
+
+#+begin_src bash :tangle bootstrap :shebang #! /bin/sh
 autoreconf --verbose --install --force
-   #+end_src
+#+end_src
+
 ** configure.ac
-   #+begin_src autoconf :tangle configure.ac
+
+#+begin_src autoconf :tangle configure.ac
 dnl Process this file with autoconf
-AC_INIT([yewscion-scripts], [0.1.0], [yewscion@gmail.com], [yewscion-scripts-0.1.0.tar.gz], [https://sr.ht/~yewscion/yewscion-scripts/])
+AC_INIT([yewscion-scripts],
+        [0.1.0],
+        [yewscion@gmail.com],
+        [yewscion-scripts-0.1.0.tar.gz],
+        [https://sr.ht/~yewscion/yewscion-scripts/])
 AC_CONFIG_SRCDIR([yewscion-scripts.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
@@ -929,14 +935,17 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 GUILE_PKG([3.0])
 GUILE_PROGS
 if test "x$GUILD" = "x"; then
-   AC_MSG_ERROR(['guild' binary not found; please check Your guile installation.])
+   AC_MSG_ERROR(['guild' binary not found;
+   please check Your guile installation.])
 fi
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 AC_OUTPUT
-   #+end_src
+#+end_src
+
 ** Makefile.am
-   #+begin_src makefile-automake :tangle Makefile.am
+
+#+begin_src makefile-automake :tangle Makefile.am
 include guile.am
 
 SOURCES =				\
@@ -960,27 +969,36 @@ ssh-wrapper                             \
 pull-projects
 
 pagr: bin/pagr.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/pagr.scm > ./pagr
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	 < $(srcdir)/bin/pagr.scm > ./pagr
 	chmod +x pagr
 adlmidi-wrapper: bin/adlmidi-wrapper.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	< $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
 	chmod +x adlmidi-wrapper
 ssh-wrapper: bin/ssh-wrapper.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/ssh-wrapper.scm > ./ssh-wrapper
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	< $(srcdir)/bin/ssh-wrapper.scm > ./ssh-wrapper
 	chmod +x ssh-wrapper
 pull-projects: bin/pull-projects.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' < $(srcdir)/bin/pull-projects.scm > ./pull-projects
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	< $(srcdir)/bin/pull-projects.scm > ./pull-projects
 	chmod +x pull-projects
 push-all-git-repos.scm:
-	cat < $(srcdir)/share/guile/push-all-git-repos.scm > push-all-git-repos.scm
+	cat < $(srcdir)/share/guile/push-all-git-repos.scm \
+	> push-all-git-repos.scm
 pull-projects.scm:
-	cat < $(srcdir)/share/guile/pull-projects.scm > pull-projects.scm
-
+	cat < $(srcdir)/share/guile/pull-projects.scm > \
+	pull-projects.scm
 clean-local:
-	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper ssh-wrapper pull-projects *~
-   #+end_src
+	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper \
+	ssh-wrapper pull-projects pull-projects.scm config.log \
+	config.status pre-inst-env Makefile *~
+#+end_src
+
 ** guile.am
-   #+begin_src makefile-automake :tangle guile.am
+
+#+begin_src makefile-automake :tangle guile.am
 moddir = $(datadir)/guile/site/$(GUILE_EFFECTIVE_VERSION)
 godir = $(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 
@@ -1001,43 +1019,43 @@ CLEANFILES = $(GOBJECTS)
 GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch -Wformat
 SUFFIXES = .scm .go
 .scm.go:
-	$(AM_V_GEN)$(top_builddir)/pre-inst-env $(GUILD) compile $(GUILE_WARNINGS) -o "$@" "$<"
-   #+end_src
+	$(AM_V_GEN)$(top_builddir)/pre-inst-env $(GUILD) \
+	compile $(GUILE_WARNINGS) -o "$@" "$<"
+#+end_src
+
 ** pre-inst-env.in
-   #+begin_src bash :tangle pre-inst-env.in
-     #!/bin/sh
+#+begin_src bash :tangle pre-inst-env.in
+#!/bin/sh
 
-     abs_top_srcdir="`cd "@abs_top_srcdir@" > /dev/null; pwd`"
-     abs_top_builddir="`cd "@abs_top_builddir@" > /dev/null; pwd`"
+abs_top_srcdir="`cd "@abs_top_srcdir@" > /dev/null; pwd`"
+abs_top_builddir="`cd "@abs_top_builddir@" > /dev/null; pwd`"
 
-     GUILE_LOAD_COMPILED_PATH="$abs_top_builddir${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_LOAD_COMPILED_PATH"
-     GUILE_LOAD_PATH="$abs_top_builddir:$abs_top_srcdir${GUILE_LOAD_PATH:+:}:$GUILE_LOAD_PATH"
-     export GUILE_LOAD_COMPILED_PATH GUILE_LOAD_PATH
+GUILE_LOAD_COMPILED_PATH="$abs_top_builddir${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_LOAD_COMPILED_PATH"
+GUILE_LOAD_PATH="$abs_top_builddir:$abs_top_srcdir${GUILE_LOAD_PATH:+:}:$GUILE_LOAD_PATH"
+export GUILE_LOAD_COMPILED_PATH GUILE_LOAD_PATH
 
-     PATH="$abs_top_builddir:$PATH"
-     export PATH
+PATH="$abs_top_builddir:$PATH"
+export PATH
 
-     exec "$@"
-   #+end_src
+exec "$@"
+#+end_src
 * Language Project Files
-  These files vary based on the programming languages used in a
-  project. Otherwise, basically the same as above: Files that need to
-  exist for the project, but don't include code outside of defining
-  theproject in some abstract way.
-** Package Definition
-   Since we're using Common Lisp, it's important to also define the
-   package we are building. This file builds each package in this
-   repo, but doesn't define any of the actual code in the package.
+These files vary based on the programming languages used in a
+project. Otherwise, basically the same as above: Files that need to
+exist for the project, but don't include code outside of defining
+the project in some abstract way.
+
+None exist yet, here.
 * Wrappers
 ** ADLMidi Wrapper
-   The main issue this script is meant to solve is that the =adlmidi=
-   command expects the filename to come first, and the arguments
-   after. However, =emms= expects the arguments to come first, and the
-   filename to be the last argument. I thought it would be easier to
-   wrap =adlmidi= than to rewrite part of =emms=, so I chose to make a
-   wrapper script that accnepts arguments the way =emms= expects, and
-   feeds them to =adlmidi= the way that it expects. So everyone is
-   happy.
+The main issue this script is meant to solve is that the =adlmidi=
+command expects the filename to come first, and the arguments
+after. However, =emms= expects the arguments to come first, and the
+filename to be the last argument. I thought it would be easier to
+wrap =adlmidi= than to rewrite part of =emms=, so I chose to make a
+wrapper script that accnepts arguments the way =emms= expects, and
+feeds them to =adlmidi= the way that it expects. So everyone is
+happy.
 
 #+begin_src scheme :tangle bin/adlmidi-wrapper.scm
 #!/usr/bin/env -S guile -e main -s
@@ -1131,23 +1149,23 @@ SUFFIXES = .scm .go
   :header-args: :tangle share/guile/push-all-git-repos.scm :mkdirp yes
   :END:
 
-  I'm going to try to write this in Guile, because I want to start
-  using it more.
+I'm going to try to write this in Guile, because I want to start
+using it more.
 
-  First, we need to ensure all the tools I'll be using are available
-  to me. We'll also define a module, so that we can easily load this
-  code elsewhere.
+First, we need to ensure all the tools I'll be using are available
+to me. We'll also define a module, so that we can easily load this
+code elsewhere.
 
-  #+begin_src scheme :eval yes :results output
+#+begin_src scheme :eval yes :results output
 (define-module (push-all-git-repos)
   :use-module (ice-9 ftw)
   :export (push-all-git-repos))
-  #+end_src
+#+end_src
 
-  Then, we'll need to define some functions to do our heavy lifting
-  for us.
+Then, we'll need to define some functions to do our heavy lifting
+for us.
 
-  #+begin_src scheme
+#+begin_src scheme
 (define (directory->list directory)
   "Returns a list containing the names of each file in the given directory."
   (map
@@ -1167,12 +1185,12 @@ SUFFIXES = .scm .go
   (narrate-directory-push repository)
   (display (string-append "git -C " repository " push " remote " trunk\n"))
   (system (string-append "git -C " repository " push " remote " trunk")))
-  #+end_src
+#+end_src
 
-  With those defined, we'll need to begin work on the stuff that will
-  be displayed to the user.
+With those defined, we'll need to begin work on the stuff that will
+be displayed to the user.
 
-  #+begin_src scheme
+#+begin_src scheme
 (define (greet-the-user)
   "Display a greeting to the user."
   (display "Beginning push of all git repos in ~/Documents now!\n"))
@@ -1182,11 +1200,11 @@ SUFFIXES = .scm .go
 (define (farewell-the-user)
   "Bid the user farewell."
   (display "All directories pushed!\n"))
-  #+end_src
+#+end_src
 
-  Finally, to tie it all together, we'll build one big function.
+Finally, to tie it all together, we'll build one big function.
 
-  #+begin_src scheme
+#+begin_src scheme
 (define (push-all-git-repos directory remote)
   "Pushes all Git Repositories inside of DIRECTORY"
   (greet-the-user)
@@ -1195,12 +1213,12 @@ SUFFIXES = .scm .go
      (push-git-repo repo remote))
    (find-git-repos directory))
   (farewell-the-user))
-  #+end_src
+#+end_src
 
-  And to add it to our =$PATH=, we'll need to make a script that calls
-  this library.
+And to add it to our =$PATH=, we'll need to make a script that calls
+this library.
 
-  #+begin_src scheme :tangle bin/pagr.scm :eval never
+#+begin_src scheme :tangle bin/pagr.scm :eval never
 #!/usr/bin/env -S guile -e main -s
 -e main -s
 !#
@@ -1227,16 +1245,121 @@ SUFFIXES = .scm .go
           ((not (file-exists? (car arguments)))
            (format #t "ERROR: ~a does not exist!~%" (car arguments)))
           (else (push-all-git-repos (car arguments) (cadr arguments))))))
-  #+end_src
+#+end_src
+** Pull Projects
+This (as of yet) undocumented project was designed to easily pull down
+all of my projects from my personal server to the =~/Documents/=
+directory on a new account.
 
-  #+RESULTS:
+Here's the library:
 
+#+begin_src scheme :tangle share/guile/pull-projects.scm
+(define-module (pull-projects)
+  :use-module (ice-9 ftw)
+  :use-module (srfi srfi-1)
+  :use-module (srfi srfi-98)
+  :export (pull-all-projects))
+(define (greet-the-user host directory)
+  (display (string-append "Pulling all projects from "
+                          host
+                          " into "
+                          directory
+                          " for You, now.\n\n")))
+(define (farewell-the-user host directory)
+  (display (string-append "Pulled all projects from "
+                          host
+                          " into "
+                          directory
+                          ".\n\n")))
+(define (format-url gituser host repouser repo suffix)
+  (string-append gituser "@" host ":" repouser "/" repo "." suffix))
+(define (format-projects-for-server host user projects)
+  (map
+   (lambda (repo)
+     (format-url "git" host user repo "git"))
+   projects))
+(define (narrate-project-pull project)
+  (display (string-append "\n--\n\nPulling down the '" project "' project…\n")))
+(define (format-git-clone directory repo)
+  (string-append "git -C " directory " clone " repo))
+(define (clone-git-repo directory repo)
+  (let ((command (format-git-clone directory repo)))
+    (system (string-append command "\n"))))
+(define (safe-clone-repo directory gituser host repouser repo suffix)
+  (let ((clone-url (format-url gituser host repouser repo suffix))
+        (clone-dir (canonicalize-path directory)))
+    (if (file-exists? (string-append clone-dir "/" repo))
+        (skip-repo-exists repo directory)
+        (clone-git-repo clone-dir clone-url))))
+(define (skip-repo-exists repo clone-dir)
+  (display (string-append
+            "Warning: Skipping '"
+            repo
+            "' as there's already a file\nnamed '"
+            repo
+            "' inside of '"
+            clone-dir
+            "'.\n")))
+(define (pull-all-projects directory gituser host repouser suffix projects)
+  (let* ((home-dir (get-environment-variable "HOME"))
+         (dest-dir (string-append home-dir "/" directory)))
+    (greet-the-user host dest-dir)
+    (map
+     (lambda (repo)
+       (narrate-project-pull repo)
+       (safe-clone-repo dest-dir gituser host repouser repo suffix))
+     projects)
+    (farewell-the-user host dest-dir)))
+
+#+end_src
+
+And here's the script that calls that library:
+#+begin_src scheme :tangle bin/pull-projects.scm
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
+(use-modules (pull-projects))
+(define projects '("acreid"
+                   "ccna"
+                   "cd2b"
+                   "cdr255-website"
+                   "clhumour"
+                   "clojure-brave-true"
+                   "cmsc-mode"
+                   "cm-step-compiler"
+                   "dotfiles"
+                   "gitjournal"
+                   "grokking-algorithms"
+                   "grokking-simplicity"
+                   "guix-home"
+                   "land-of-lisp"
+                   "org"
+                   "org-roam"
+                   "password-store"
+                   "provision-zq630"
+                   "self-sovereign-identity"
+                   "sicp"
+                   "the-programmers-brain"
+                   "wiki-templates"
+                   "yewscion-blog"
+                   "yewscion-guix-channel"
+                   "yewscion-scripts"
+                   "yewscion-website"))
+(define (main args)
+  (pull-all-projects "Documents"
+                     "git"
+                     "cdr255.com"
+                     "yewscion"
+                     "git"
+                     projects))
+
+#+end_src
 * Links                                                            :noexport:
 ** Export Docs
-   #+begin_src elisp :eval yes
-     (org-texinfo-export-to-info)
-     (org-man-export-to-man)
-     (org-html-export-to-html)
-     (org-ascii-export-to-ascii)
-     (org-latex-export-to-pdf)
-   #+end_src
+#+begin_src elisp :eval yes
+(org-texinfo-export-to-info)
+(org-man-export-to-man)
+(org-html-export-to-html)
+(org-ascii-export-to-ascii)
+(org-latex-export-to-pdf)
+#+end_src
