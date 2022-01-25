@@ -1808,7 +1808,7 @@ This will be the thing that actually calls the above library.
                      "- grep (coreutils)\n"
                      "- sha1sum (coreutils)\n\n")))
           (else
-           (string->encoded-string (get-result-line shell-command-string)))))
+           (string->encoded-string (get-result-line shell-command-string))))))
 #+end_src
 
 * Links                                                            :noexport:
