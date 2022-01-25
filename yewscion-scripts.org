@@ -1735,7 +1735,6 @@ output."
     value))
 #+end_src
 
-
 **** Putting it all Together
 Now we just need to tie the above functions together into one big function we
 can call to get our encoded string. We'll tie the above functions
@@ -1754,7 +1753,7 @@ In order to make this as general-use as possible, we'll need to define an
 optional argument for the character set and one for the base.
 
 #+begin_src scheme
-(define (string->encoded-string original-string #:optional (base 16) (character-set character-set))
+(define* (string->encoded-string original-string #:optional (base 16) (character-set character-set))
   "Takes a string which represents a number in some base ORIGINAL-STRING (and
 optionally a numerical base for that string BASE and a character set to encode
 the string into CHARACTER-SET and returns the encoded string."

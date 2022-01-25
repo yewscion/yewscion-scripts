@@ -224,7 +224,7 @@ output."
     (close-pipe port)
     value))
 
-(define (string->encoded-string original-string #:optional (base 16) (character-set character-set))
+(define* (string->encoded-string original-string #:optional (base 16) (character-set character-set))
   "Takes a string which represents a number in some base ORIGINAL-STRING (and
 optionally a numerical base for that string BASE and a character set to encode
 the string into CHARACTER-SET and returns the encoded string."
