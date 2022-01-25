@@ -950,7 +950,8 @@ include guile.am
 
 SOURCES =				\
 push-all-git-repos.scm                  \
-pull-projects.scm
+pull-projects.scm                       \
+display-encoded-wifi.scm
 
 EXTRA_DIST =				\
 README.md				\
@@ -959,14 +960,16 @@ pre-inst-env.in				\
 bin/pagr.scm				\
 bin/adlmidi-wrapper.scm			\
 bin/ssh-wrapper.scm                     \
-bin/pull-projects.scm                   
+bin/pull-projects.scm                   \
+bin/display-encoded-wifi.scm
 
 
 bin_SCRIPTS =				\
 pagr					\
 adlmidi-wrapper				\
 ssh-wrapper                             \
-pull-projects
+pull-projects                           \
+display-encoded-wifi
 
 pagr: bin/pagr.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
@@ -984,16 +987,24 @@ pull-projects: bin/pull-projects.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
 	< $(srcdir)/bin/pull-projects.scm > ./pull-projects
 	chmod +x pull-projects
+display-encoded-wifi: bin/display-encoded-wifi.scm
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	< $(srcdir)/bin/display-encoded-wifi.scm > ./display-encoded-wifi
+	chmod +x display-encoded-wifi
 push-all-git-repos.scm:
 	cat < $(srcdir)/share/guile/push-all-git-repos.scm \
 	> push-all-git-repos.scm
 pull-projects.scm:
 	cat < $(srcdir)/share/guile/pull-projects.scm > \
 	pull-projects.scm
+display-encoded-wifi.scm:
+	cat < $(srcdir)/share/guile/display-encoded-wifi.scm > \
+	display-encoded-wifi.scm
 clean-local:
 	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper \
 	ssh-wrapper pull-projects pull-projects.scm config.log \
-	config.status pre-inst-env Makefile *~
+	config.status pre-inst-env Makefile display-encoded-wifi.scm \
+	display-encoded-wifi *~
 #+end_src
 
 ** guile.am
@@ -1354,6 +1365,453 @@ And here's the script that calls that library:
                      projects))
 
 #+end_src
+* Tools
+** Display Encoded Wifi
+The idea behind this script was to make it easy from my shell to immediately
+tell which wifi network I was connected to by generating a short encoded
+sequence of characters and inserting it into my prompt.
+
+*** Library
+:PROPERTIES:
+:header-args: :tangle share/guile/display-encoded-wifi.scm
+:END:
+
+We'll start by defining the module =display-encoded-wifi=, and exporting both
+the function =display-encoded-wifi= and the function it uses to create that hash
+(in case I can use it elsewhere) =string->encoded-string=.
+
+**** Module Definition
+#+begin_src scheme
+(define-module (display-encoded-wifi)
+  :use-module (ice-9 ftw)             ; Filesystem stuff
+  :use-module (ice-9 rdelim)          ; Delimited I/O
+  :use-module (ice-9 popen)           ; Pipes
+  :export (get-result-line            ; Interact with environment
+           string->encoded-string     ; Encodes Arbitrary Strings
+           shell-command-string))     ; Shell Commands to Run
+#+end_src
+
+**** Changing Bases
+Originally, I wanted to convert things to base64, but unfortunately all of the
+functions I could find operated on bit streams as opposed to number streams
+(that is, they produced a longer-length string at minimum, in order to encode
+things like pictures, instead of literally changing number bases). So, we are
+going to roll our own here.
+
+The basic process for changing bases is fairly straightforward:
+
+1. Take a number (say 47) and a base (let's use binary (base 2)).
+2. Figure out the highest exponent we can apply to the base and not exceed the
+   number (2^2=4, 2^3=8, 2^4=16, 2^5=32, 2^6=64, ∴ the highest exponent is 5 in
+   our example).
+3. Note how many times the base raised to that exponent can go into the number
+   (2^5 is 32, which divides into 47 once) and subtract the base raised to the
+   exponent times the number of times it can evenly divide into it from the
+   original (47 - ((2^5)*1) = 15) and carry this number forward.
+4. Repeat this process for all exponents until You complete the 0th exponent
+   (2^5 goes into 47 once, 2^4 goes into 15 zero times, 2^3 goes into 15 once,
+   2^2 goes into 7 once, 2^1 goes into 3 once, 2^0 goes into 1 once.)
+5. If You have any remainder after the 0 exponent, You chose the wrong highest
+   exponent.
+6. Combine these numbers into one sequence of digits, and You have the number in
+   the new base (47 in binary is 101111).
+
+
+We'll divide this into two functions, both of which will be recursive. The first
+is =highest-exponent-needed=, which will complete step 1. The second is
+=values-by-position=, which will complete steps 2-4. Finally, we would convert
+this list of values by position into a string, but as we are going to be
+encoding this string with a custom set of digits, we'll save that step for a
+later section.
+
+#+begin_src scheme
+(define* (highest-exponent-needed number base #:optional (exponent 0))
+  "Takes a number NUMBER and a numerical base BASE (and optionally a
+starting exponent EXPONENT) and returns a number.
+
+Calculates the highest exponent that a specified BASE can be raised to
+and still cleanly divide into a NUMBER. The optional EXPONENT argument
+is mostly for recursion and referential transparency, but can also be
+used to speed up calculation if a known-good exponent is supplied."
+  ; This algorithm recurses until it fails to produce an exponent that
+  ; divides cleanly, and then returns the exponent preceding the
+  ; current one (as the current one will have failed).
+  (if (< number (expt base exponent))
+      (-  exponent 1)
+      (highest-exponent-needed number base (+ 1 exponent))))
+#+end_src
+
+The =values-by-position= function is a bit more complicated, and could probably
+be refactored.
+
+#+begin_src scheme
+(define* (values-by-position number base highest-exponent #:optional (starting-list '()))
+  "Takes a decimal number NUMBER, a numerical base BASE, an exponent
+HIGHEST-EXPONENT that is assumed to be the highest exponent that BASE
+can be raised to and still cleanly divide into NUMBER (and optionally
+a prepopulated list STARTING-LIST), and returns a list of integers
+representing the value at each rank of the NUMBER in the BASE."
+  (cond
+   ; If we have a negative exponent, we are done, so return the list.
+   ((< highest-exponent 0) starting-list)
+   ; If we have 0 as our exponent, we don't need to manipulate the
+   ; base.
+   ((= highest-exponent 0) (cons number (values-by-position number base (- highest-exponent 1))))
+   ; Otherwise, calculate the place value base on the exponent, create
+   ; the value at that position, and recurse with an exponent one
+   ; lower than the current one. This is probably where we could
+   ; refactor.
+   (else (let* ((place (expt base highest-exponent))
+                     (delta (truncate (/ number place))))
+                (cons delta (values-by-position (- number (* place delta)) base (- highest-exponent 1)))))))
+#+end_src
+**** Encoding
+In order to properly encode a number in a custom character set, we first need a
+character set. Though You can easily sepcify Your own, I included a default
+(which is actually just the Unicode Block for [[https://en.wikipedia.org/wiki/Geometric_Shapes_(Unicode)][Geometric Shapes]]) because that's
+what I will be using most of the time. It's defined in the global variable
+=character-set=, and is a list of characters.
+
+#+begin_src scheme
+(define character-set '(#\x25A0  ; This default character set is
+                                 ; actually just the unicode block for
+                                 ; Geometric Shapes. So long as You
+                                 ; specify a list of characters, You
+                                 ; can easily substitute any arbitrary
+                                 ; list of characters in the below
+                                 ; formulae.
+                        #\x25A1
+                        #\x25A2
+                        #\x25A3
+                        #\x25A4
+                        #\x25A5
+                        #\x25A6
+                        #\x25A7
+                        #\x25A8
+                        #\x25A9
+                        #\x25AA
+                        #\x25AB
+                        #\x25AC
+                        #\x25AD
+                        #\x25AE
+                        #\x25AF
+                        #\x25B0
+                        #\x25B1
+                        #\x25B2
+                        #\x25B3
+                        #\x25B4
+                        #\x25B5
+                        #\x25B6
+                        #\x25B7
+                        #\x25B8
+                        #\x25B9
+                        #\x25BA
+                        #\x25BB
+                        #\x25BC
+                        #\x25BD
+                        #\x25BE
+                        #\x25BF
+                        #\x25C0
+                        #\x25C1
+                        #\x25C2
+                        #\x25C3
+                        #\x25C4
+                        #\x25C5
+                        #\x25C6
+                        #\x25C7
+                        #\x25C8
+                        #\x25C9
+                        #\x25CA
+                        #\x25CB
+                        #\x25CC
+                        #\x25CD
+                        #\x25CE
+                        #\x25CF
+                        #\x25D0
+                        #\x25D1
+                        #\x25D2
+                        #\x25D3
+                        #\x25D4
+                        #\x25D5
+                        #\x25D6
+                        #\x25D7
+                        #\x25D8
+                        #\x25D9
+                        #\x25DA
+                        #\x25DB
+                        #\x25DC
+                        #\x25DD
+                        #\x25DE
+                        #\x25DF
+                        #\x25E0
+                        #\x25E1
+                        #\x25E2
+                        #\x25E3
+                        #\x25E4
+                        #\x25E5
+                        #\x25E6
+                        #\x25E7
+                        #\x25E8
+                        #\x25E9
+                        #\x25EA
+                        #\x25EB
+                        #\x25EC
+                        #\x25ED
+                        #\x25EE
+                        #\x25EF
+                        #\x25F0
+                        #\x25F1
+                        #\x25F2
+                        #\x25F3
+                        #\x25F4
+                        #\x25F5
+                        #\x25F6
+                        #\x25F7
+                        #\x25F8
+                        #\x25F9
+                        #\x25FA
+                        #\x25FB
+                        #\x25FC
+                        #\x25FD
+                        #\x25FE
+                        #\x25FF ))
+#+end_src
+
+Let's start by encoding a single digit. Here's the algorithm:
+
+1. Take the integer, and make sure it is within the bounds of our set. Larger
+   numbers are just discarded for now.
+2. Once that is confirmed, we'll simply look up which character is used at that
+   integer's position, and return it as a character.
+
+
+ This can be one function, thanks to a =let= form.
+
+#+begin_src scheme
+(define (encode-digit number character-set)
+  "Takes an integer NUMBER and a list of characters CHARACTER-SET, and
+returns the character at the NUMBER position in that set. If NUMBER is
+larger than the length of the list, returns NIL."
+  (let ((array (list->array 1 character-set))) ; Convert the list to
+                                               ; an array, to support
+                                               ; large sets.
+    (unless (> number (- (array-length array) 1)) ; Filter out numbers
+                                                  ; outside of our
+                                                  ; set.
+      (array-ref array number))))
+#+end_src
+
+We can then apply this to a list of integers using =map=. Here's a wrapper
+function to make this more straightforward.
+
+#+begin_src scheme
+(define* (encode-digit-list list #:optional (character-set character-set))
+  "Takes a list of integers LIST (and optionally a list of characters
+CHARACTER-SET, and returns a list of characters taken from the set by
+using the integers in LIST as indices to CHARACTER-SET."
+  (map
+   (lambda (x)
+     (encode-digit x character-set))
+   list))
+#+end_src
+**** Decoding
+We are using a sha1sum to turn our wifi ESSID into a number, and so we have to
+decode the hexadecimal number it creates into a list of values to encode.
+
+Our =values-by-position= function is well suited for this, but needs some
+wrapping in order to make it work in a straightforward way.
+
+1. We'll need to decode the number from a hexadecimal string to a decimal number
+   for this to easily work.
+2. We then want to make sure that our base includes all entries in our character
+   set, so we set the base equal to the length of the character set minus 1
+   (because arrays are indexed at zero.)
+3. We then need to determine our highest rank (based on the largest exponent, as
+   above, using =highest-exponent-needed=).
+4. Once we have all of this, we can just call =values-by-position= with the
+   above values as arguments.
+
+
+#+begin_src scheme
+(define* (value->list value #:optional (starting-base 16) (character-set character-set))
+  "Takes a string which represents a number VALUE (and optionally a
+base STARTING-BASE (defaults to hexadecimal) and a character set
+CHARACTER-SET (defaults to included character-set)) and returns a list
+of integers representing the index in the character set needed for a
+specific rank."
+  (let* ((number (string->number value starting-base))
+                                        ; Decode the string into a
+                                        ; decimal number.
+         (ending-base (- (length character-set) 1))
+                                        ; The base is the length of
+                                        ; the character set minus 1,
+                                        ; due to zero indexing.
+         (exponent (highest-exponent-needed number ending-base)))
+                                        ; Start with the highest
+                                        ; exponent that lets the base
+                                        ; cleanly divide into the
+                                        ; number.
+    (values-by-position number ending-base exponent)))
+#+end_src
+
+That said, our number is still much too large to realistically be a "short
+encoded string", so we need to take the above number and reduce it somehow.
+
+1. If the length of the list is 1, we can just return that list.
+2. If the length of the list is 2, we can add the two numbers together, divide
+   them by the length of the character set minus 1 (zero indexing), and return
+   the list.
+3. If the list is larger than two, we take the first two elements, apply step 2,
+   and then recurse with the rest of the list.
+
+#+begin_src scheme
+(define* (combine-sum start-list #:optional (character-set character-set))
+  "Takes a list of integers START LIST (and optionally a CHARACTER-SET), and
+returns a list of integers sums each pair of integers obtained by summing each
+pair of integers in START-LIST and dividing the result by the length of
+CHARACTER-SET minus 1."
+  (let ((denominator (- (length character-set) 1)) ; For Zero Indexing, we need
+                                                   ; to subtract 1.
+        (list-length (length start-list)))         
+  (cond ((= list-length 1)
+         start-list)
+        ((= list-length 2)
+         (list (modulo
+                (+ (car start-list) (cadr start-list))
+                denominator)))
+        (else
+         (cons (modulo
+                (+ (car start-list) (cadr start-list))
+                denominator)
+               (combine-sum (cddr start-list)))))))
+#+end_src
+**** Outside Dependencies
+We are explicitly depending on =nm-cli= and =sha1sum= for now, though I'd like
+to implement the hashing inside of guile eventually. First, we'll define the
+series of commands we are going to use:
+
+1. =nmcli connection show --active=
+
+   Shows the active network connections using NetworkManager.
+2. =grep wifi=
+
+   Filter so only lines containing 'wifi' are included.
+3. =sed 's/  .*-.*-.*//'=
+
+   Remove the end of the output lines from =nmcli=.
+4. =sha1sum=
+
+   Calculate a SHA1SUM hash of the lines remaining.
+5. =sed 's/  -//'=
+
+   Remove the end of the hash returned by =sha1sum=.
+
+
+Let's store this string of commands (connected by pipes) in a symbol to make the
+resulting function easier to call.
+
+#+begin_src scheme
+; This is the list of commands run on the shell to get the original
+; hex value.
+(define shell-command-string
+  (string-append
+   "nmcli connection show --active | " ; Get the active connections.
+   "grep wifi | "                      ; Only keep the wifi.
+   "sed 's/  .*-.*-.*//' | "           ; Only keep the essid.
+   "sha1sum | "                        ; Hash it.
+   "sed 's/  -//'"))                   ; Remove formatting, leaving                                       ; hex.
+#+end_src
+
+We'll need to run this string on the shell, and read the result into a variable.
+
+#+begin_src scheme
+(define (get-result-line command)
+  "Obtain a value from outside of scheme that will be used as the base
+for our encoding by running COMMAND. Only reads the first line of
+output."
+  (let* ((port (open-input-pipe command))
+         (value (read-line port)))
+    (close-pipe port)
+    value))
+#+end_src
+
+
+**** Putting it all Together
+Now we just need to tie the above functions together into one big function we
+can call to get our encoded string. We'll tie the above functions
+together like so:
+
+1. Take a value, which should be a string representing a hexadecimal number.
+2. Turn it into a list of ranked values with =value->list=.
+3. Reduce those ranked values to a list no longer than 7 characters long using
+   =combine-sum=. (NOTE: I need to refactor this restraint; Right now it is just
+   kept at this length by trial and error.
+4. Encode the resulting list of values using =encode-digit-list=.
+5. Turn it into a string using =list->string=.
+
+
+In order to make this as general-use as possible, we'll need to define an
+optional argument for the character set and one for the base.
+
+#+begin_src scheme
+(define (string->encoded-string original-string #:optional (base 16) (character-set character-set))
+  "Takes a string which represents a number in some base ORIGINAL-STRING (and
+optionally a numerical base for that string BASE and a character set to encode
+the string into CHARACTER-SET and returns the encoded string."
+  (list->string
+   (encode-digit-list
+    (combine-sum
+     (combine-sum
+      (value->list original-string base character-set)
+      character-set)
+     character-set)
+    character-set)))
+#+end_src
+
+*** Script
+This will be the thing that actually calls the above library.
+
+#+begin_src scheme :tangle bin/display-encoded-wifi.scm
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
+(use-modules (display-encoded-wifi))
+(define (main args)
+  (let ((arguments (cdr args))
+        (path (string-split (getenv "PATH") (lambda (x) (eqv? x #\:)))))
+    (cond ((not (equal? (length arguments) 0))
+           (display (string-append
+                     "Usage: display-encoded-wifi\n\n"
+
+                     "Explanation of Arguments:\n\n"
+
+                     "  There are no arguments for this command.\n\n"
+
+                     "This program depends on nmcli, grep, sed, and sha1sum.\n\n"
+
+                     "This program is entirely written in GNU Guile Scheme,\n"
+                     "and You are welcome to change it how You see fit.\n\n"
+
+                     "Guile Online Help: <https://www.gnu.org/software/guile/>\n"
+                     "Local Online Help: 'info guile'\n")))
+          ((or
+            (not (search-path path "nmcli"))
+            (not (search-path path "sed"))
+            (not (search-path path "grep"))
+            (not (search-path path "sha1sum")))
+           (display (string-append
+                     "ERROR: One or more of the following programs was not found\n"
+                     "       in Your $PATH. Please ensure they are all installed\n"
+                     "       before using this program.\n\n"
+
+                     "- nmcli (NetworkManager)\n"
+                     "- sed (coreutils)\n"
+                     "- grep (coreutils)\n"
+                     "- sha1sum (coreutils)\n\n")))
+          (else
+           (string->encoded-string (get-result-line shell-command-string)))))
+#+end_src
+
 * Links                                                            :noexport:
 ** Export Docs
 #+begin_src elisp :eval yes
