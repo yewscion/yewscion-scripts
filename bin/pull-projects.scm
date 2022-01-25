@@ -3,6 +3,7 @@
 !#
 (use-modules (pull-projects))
 (define projects '("acreid"
+                   "biblio"
                    "ccna"
                    "cd2b"
                    "cdr255-website"
