@@ -35,4 +35,4 @@
                      "- grep (coreutils)\n"
                      "- sha1sum (coreutils)\n\n")))
           (else
-           (string->encoded-string (get-result-line shell-command-string))))))
+           (display (string->encoded-string (get-result-line shell-command-string)))))))
