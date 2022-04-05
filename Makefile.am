@@ -1,7 +1,6 @@
 include guile.am
 
 SOURCES =				\
-push-all-git-repos.scm                  \
 pull-projects.scm                       \
 display-encoded-wifi.scm
 
@@ -9,7 +8,6 @@ EXTRA_DIST =				\
 README.md				\
 bootstrap				\
 pre-inst-env.in				\
-bin/pagr.scm				\
 bin/adlmidi-wrapper.scm			\
 bin/ssh-wrapper.scm                     \
 bin/pull-projects.scm                   \
@@ -17,16 +15,11 @@ bin/display-encoded-wifi.scm
 
 
 bin_SCRIPTS =				\
-pagr					\
 adlmidi-wrapper				\
 ssh-wrapper                             \
 pull-projects                           \
 display-encoded-wifi
 
-pagr: bin/pagr.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	 < $(srcdir)/bin/pagr.scm > ./pagr
-	chmod +x pagr
 adlmidi-wrapper: bin/adlmidi-wrapper.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
 	< $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
@@ -43,9 +36,6 @@ display-encoded-wifi: bin/display-encoded-wifi.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
 	< $(srcdir)/bin/display-encoded-wifi.scm > ./display-encoded-wifi
 	chmod +x display-encoded-wifi
-push-all-git-repos.scm:
-	cat < $(srcdir)/share/guile/push-all-git-repos.scm \
-	> push-all-git-repos.scm
 pull-projects.scm:
 	cat < $(srcdir)/share/guile/pull-projects.scm > \
 	pull-projects.scm
