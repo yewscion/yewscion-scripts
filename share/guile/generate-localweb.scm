@@ -211,7 +211,8 @@
                                         "mirrorlist-directory")
                                        (,mirrorlist-file
                                         "mirrorlist-file")))
-                     (generate-filters filters))
+                     (generate-filters filters mirrorlist-directory
+                                       mirrorlist-file))
                " "
                'infix))
 (define (generate-localweb)
