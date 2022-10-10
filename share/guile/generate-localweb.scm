@@ -9,6 +9,10 @@
      ,(string-append
        (getenv "HOME")
        "/LocalWeb"))
+    (mirrorlist-directory
+     ,(string-append
+       (getenv "HOME")
+       "/LocalWeb"))
     (mirrorlist-file
      "mirrorlist.txt")
     (list-of-numbers
@@ -65,9 +69,9 @@
   (remove-empty-strings (string-split
    (get-file-as-string (string-append directory "/" file))
    #\newline)))
-(define (generate-mirrorlist-option directory filename)
+(define (generate-mirrorlist-option mirrorlist-directory filename)
   (string-append "-%L "
-                 directory
+                 mirrorlist-directory
                  "/"
                  filename))
 (define (generate-output-directory-option directory)
@@ -141,7 +145,7 @@
                                                'directory))
                                   (mirrorlist-directory
                                    (default-values
-                                     'directory))
+                                     'mirrorlist-directory))
                                   (mirrorlist-file (default-values
                                                      'mirrorlist-file)))
   (string-join (list
