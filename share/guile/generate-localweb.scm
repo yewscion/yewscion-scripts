@@ -12,11 +12,12 @@
     (mirrorlist-file
      "mirrorlist.txt")
     (list-of-numbers
-     (4
+     (104
       3600
       2
       1
-      7))
+      7
+      4))
     (language-preferences
      "\"en, *\"")
     (user-agent-string
@@ -24,14 +25,13 @@
        "\"Mozilla/5.0 (X11; Linux x86_64; rv:83.0) "
        "Gecko/20100101 Firefox/83.0\""))
     (html-footer
-     "\"Mirrored [from host %s [file %s [at %s]]]\"")
+     "\"<!-- Mirrored [from host %s [file %s [at %s]]] -->\"")
     (mime-options
      "asp=text/html,php3=text/html,php=text/html,cgi=image/gif")
     (singleton-options
      ("-B"
       "--update"
       "-C"
-      "-K"
       "-%x"
       "-%s"
       "-z"
@@ -88,7 +88,9 @@
                  " -s"
                  (number->string (cadddr list-of-numbers))
                  " -p"
-                 (number->string (cadr (cdddr list-of-numbers)))))
+                 (number->string (cadr (cdddr list-of-numbers)))
+                 " -K"
+                 (number->string (caddr (cdddr list-of-numbers)))))
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
