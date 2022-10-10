@@ -61,6 +61,10 @@
 (define (default-values symbol)
   (car (assoc-ref +default-variables+ symbol)))
 (define command-name "httrack")
+(define (get-mirrorlist directory file)
+  (remove-empty-strings (string-split
+   (get-file-as-string (string-append directory "/" file))
+   #\newline)))
 (define (generate-mirrorlist-option directory filename)
   (string-append "-%L "
                  directory
@@ -94,10 +98,11 @@
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
-(define (generate-filters filters)
-  (string-join filters
+(define (generate-filters filters mirrorlist-directory mirrorlist-file)
+  (let ((sites (get-mirrorlist mirrorlist-directory mirrorlist-file)))
+    (string-join (iteratively-replace-regexp "\\$site" filters sites)
                " "
-               'infix))
+               'infix)))
 (define (generate-singleton-options singleton-options)
   (string-join singleton-options
                " "
