@@ -12,12 +12,12 @@
     (mirrorlist-file
      "mirrorlist.txt")
     (list-of-numbers
-     (4
+     (104
       3600
       2
       1
       7
-      104))
+      3))
     (language-preferences
      "\"en, *\"")
     (user-agent-string
