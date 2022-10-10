@@ -226,7 +226,7 @@
                                        (,mirrorlist-directory
                                         "mirrorlist-directory")
                                        (,mirrorlist-file
-                                        "mirrorlist-file")))
+                                        "mirrorlist-file"))))
                " "
                'infix))
 (define (generate-localweb)
