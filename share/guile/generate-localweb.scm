@@ -98,16 +98,16 @@
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
-(define (generate-filters #:key
+(define* (generate-filters #:key
                           (filters
-                                  (default-values
-                                    'filters))
+                           (default-values
+                             'filters))
                           (mirrorlist-directory
-                                  (default-values
-                                    'mirrorlist-directory))
+                           (default-values
+                             'mirrorlist-directory))
                           (mirrorlist-file
-                                  (default-values
-                                    'mirrorlist-file)))
+                           (default-values
+                             'mirrorlist-file)))
   (let ((sites (get-mirrorlist mirrorlist-directory mirrorlist-file)))
     (string-join (iteratively-replace-regexp "\\$site" filters sites)
                " "
