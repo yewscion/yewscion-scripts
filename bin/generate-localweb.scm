@@ -10,8 +10,7 @@
          (execute (option-ref options 'execute #f))
          (help (or
                 (option-ref options 'help #f)
-                (= (length args) 0)))
-         (display))
+                (= (length args) 0))))
     (when help
       (display help-string)
       (quit))
