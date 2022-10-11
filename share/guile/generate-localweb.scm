@@ -43,25 +43,25 @@
       "-I"
       "-d"))
     (filters
-     ("\"-$site/index.php/Special:*\""
-      "\"-$site/index.php?title=Special:*\""
-      "\"+$site/index.php/Special:Recentchanges\""
-      "\"-$site/index.php/User:*\""
-      "\"-$site/index.php/Talk_User:*\""
-      "\"-$site/index.php/MediaWiki:*\""
-      "\"-$site/index.php/Talk_MediaWiki:*\""
-      "\"-$site/index.php/Help:*\""
-      "\"-$site/index.php/Talk_Help:*\""
-      "\"-$site/index.php/Project:*\""
-      "\"-$site/index.php/Talk_Project:*\""
+     ("\"-$site*Special:*\""
+      "\"-$site*?title=Special:*\""
+      "\"+$site*Special:Recentchanges\""
+      "\"-$site*User:*\""
+      "\"-$site*Talk_User:*\""
+      "\"-$site*MediaWiki:*\""
+      "\"-$site*Talk_MediaWiki:*\""
+      "\"-$site*Help:*\""
+      "\"-$site*Talk_Help:*\""
+      "\"-$site*Project:*\""
+      "\"-$site*Talk_Project:*\""
       "\"+*.css\""
-      "\"-$site/index.php?title=*&oldid=*\""
-      "\"-$site/index.php?title=*&action=edit\""
-      "\"-$site/index.php?title=*&curid=*\""
-      "\"+$site/index.php?title=*&action=history\""
-      "\"-$site/index.php?title=*&action=history&*\""
-      "\"-$site/index.php?title=*&curid=*&action=history*\""
-      "\"-$site/index.php?title=*&limit=*&action=history\""))))
+      "\"-$site*?title=*&oldid=*\""
+      "\"-$site*?title=*&action=edit\""
+      "\"-$site*?title=*&curid=*\""
+      "\"+$site*?title=*&action=history\""
+      "\"-$site*?title=*&action=history&*\""
+      "\"-$site*?title=*&curid=*&action=history*\""
+      "\"-$site*?title=*&limit=*&action=history\""))))
 (define (default-values symbol)
   (car (assoc-ref +default-variables+ symbol)))
 (define command-name "httrack")

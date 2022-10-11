@@ -18,7 +18,9 @@
       (display version-string)
       (quit))
     (when listing
-      (display (generate-command-string))
+      (display (string-append
+                (generate-command-string)
+                "\n"))
       (quit))
     (when execute
       (generate-localweb)
@@ -39,7 +41,7 @@
    "                         configuration to the screen, for\n"
    "                         testing purposes.\n"
    "  -x, --execute:       Actually Generate the LocalWeb,\n"
-   "                         according to the current"
+   "                         according to the current\n"
    "                         configuration.\n"
    "  -h, --help:          Display this help message.\n"
    "  -v, --version:       Display version information.\n"
