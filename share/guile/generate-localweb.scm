@@ -56,7 +56,7 @@
       "\"-$site*Talk_Project:*\""
       "\"+*.css\""
       "\"-$site*?title=*&oldid=*\""
-      "\"-$site*?title=*&action=edit\""
+      "\"-$site*?title=*&action=edit*\""
       "\"-$site*?title=*&curid=*\""
       "\"+$site*?title=*&action=history\""
       "\"-$site*?title=*&action=history&*\""
