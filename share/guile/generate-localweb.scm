@@ -21,7 +21,8 @@
       2
       1
       7
-      0))
+      0
+      10000000000000))
     (language-preferences
      "\"en, *\"")
     (user-agent-string
@@ -41,7 +42,7 @@
       "-z"
       "-%I"
       "-I"
-      "-d"))
+      "-a"))
     (filters
      ("\"-$site*Special:*\""
       "\"-$site*?title=Special:*\""
@@ -98,7 +99,9 @@
                  " -p"
                  (number->string (cadr (cdddr list-of-numbers)))
                  " -K"
-                 (number->string (caddr (cdddr list-of-numbers)))))
+                 (number->string (caddr (cdddr list-of-numbers)))
+                 " -#L"
+                 (number->string (cadddr (cdddr list-of-numbers)))))
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
