@@ -62,7 +62,9 @@
       "\"+$site*?title=*&action=history\""
       "\"-$site*?title=*&action=history&*\""
       "\"-$site*?title=*&curid=*&action=history*\""
-      "\"-$site*?title=*&limit=*&action=history\""))))
+      "\"-$site*?title=*&limit=*&action=history\""
+      "\"-$site*images/thumb/*\""
+      "\"-$site*load.php*\""))))
 (define (default-values symbol)
   (car (assoc-ref +default-variables+ symbol)))
 (define command-name "httrack")
