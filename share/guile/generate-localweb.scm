@@ -23,7 +23,8 @@
       7
       0
       10000000000000
-      25))
+      25
+      5))
     (language-preferences
      "\"en, *\"")
     (user-agent-string
@@ -106,7 +107,9 @@
                  " -#L"
                  (number->string (cadddr (cdddr list-of-numbers)))
                  " -r"
-                 (number->string (cadr (cdddr (cdddr list-of-numbers))))))
+                 (number->string (cadr (cdddr (cdddr list-of-numbers))))
+                 " -R"
+                 (number->string (caddr (cdddr (cdddr list-of-numbers)))))))
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
