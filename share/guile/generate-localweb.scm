@@ -109,7 +109,7 @@
                  " -r"
                  (number->string (cadr (cdddr (cdddr list-of-numbers))))
                  " -R"
-                 (number->string (caddr (cdddr (cdddr list-of-numbers)))))))
+                 (number->string (caddr (cdddr (cdddr list-of-numbers))))))
 (define (generate-mime-options mime-options)
   (string-append "-%A "
                  mime-options))
