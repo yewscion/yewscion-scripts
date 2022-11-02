@@ -8,11 +8,11 @@
   `((directory
      ,(string-append
        (getenv "HOME")
-       "/LocalWeb"))
+       "/Mirrors"))
     (mirrorlist-directory
      ,(string-append
        (getenv "HOME")
-       "/LocalWeb"))
+       "/Mirrors"))
     (mirrorlist-file
      "mirrorlist.txt")
     (list-of-numbers
