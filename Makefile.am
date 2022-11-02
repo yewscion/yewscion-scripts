@@ -15,7 +15,7 @@ bin/ssh-wrapper.scm                     \
 bin/pull-projects.scm                   \
 bin/display-encoded-wifi.scm            \
 bin/generate-localweb.scm               \
-bin/run-backups.scm                     \
+bin/run-backups.scm
 
 
 bin_SCRIPTS =				\
