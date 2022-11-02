@@ -43,6 +43,10 @@ display-encoded-wifi: bin/display-encoded-wifi.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
 	< $(srcdir)/bin/display-encoded-wifi.scm > ./display-encoded-wifi
 	chmod +x display-encoded-wifi
+run-backups: bin/run-backups.scm
+	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
+	< $(srcdir)/bin/run-backups.scm > ./run-backups
+	chmod +x run-backups
 pull-projects.scm:
 	cat < $(srcdir)/share/guile/pull-projects.scm > \
 	pull-projects.scm
@@ -52,8 +56,12 @@ display-encoded-wifi.scm:
 generate-localweb.scm:
 	cat < $(srcdir)/share/guile/generate-localweb.scm > \
 	generate-localweb.scm
+run-backups.scm:
+	cat < $(srcdir)/share/guile/run-backups.scm > \
+	run-backups.scm
 clean-local:
 	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper \
 	ssh-wrapper pull-projects pull-projects.scm config.log \
 	config.status pre-inst-env Makefile display-encoded-wifi.scm \
-	display-encoded-wifi generate-localweb.scm generate-localweb *~
+	display-encoded-wifi generate-localweb.scm generate-localweb \
+	run-backups.scm run-backups *~
