@@ -4,7 +4,7 @@ SOURCES =				\
 pull-projects.scm                       \
 display-encoded-wifi.scm                \
 generate-localweb.scm                   \
-run-backups
+run-backups.scm
 
 EXTRA_DIST =				\
 README.md				\
