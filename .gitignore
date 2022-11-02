@@ -93,3 +93,4 @@ flycheck_*.el
 /bin/pagr.go
 /build-aux/
 /configure
+/build/
