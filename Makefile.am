@@ -3,7 +3,8 @@ include guile.am
 SOURCES =				\
 pull-projects.scm                       \
 display-encoded-wifi.scm                \
-generate-localweb.scm
+generate-localweb.scm                   \
+run-backups
 
 EXTRA_DIST =				\
 README.md				\
@@ -13,7 +14,8 @@ bin/adlmidi-wrapper.scm			\
 bin/ssh-wrapper.scm                     \
 bin/pull-projects.scm                   \
 bin/display-encoded-wifi.scm            \
-bin/generate-localweb.scm
+bin/generate-localweb.scm               \
+bin/run-backups.scm                     \
 
 
 bin_SCRIPTS =				\
@@ -21,7 +23,8 @@ adlmidi-wrapper				\
 ssh-wrapper                             \
 pull-projects                           \
 display-encoded-wifi                    \
-generate-localweb
+generate-localweb			\
+run-backups
 
 adlmidi-wrapper: bin/adlmidi-wrapper.scm
 	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
