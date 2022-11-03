@@ -26,3 +26,4 @@
 ; GOAL: Replicate `cp -LRv --no-preserve=all \
 ; ~/.local/share/empty-repo/. .;chmod 775 setup-symlinks.sh bootstrap \
 ; incant.sh;./setup-symlinks.sh`
+;;; For verbatim copying: cp -LRv --no-preserve=all ~/.local/share/empty-repo/. .;chmod 775 setup-symlinks.sh bootstrap incant.sh; ./setup-symlinks.sh
