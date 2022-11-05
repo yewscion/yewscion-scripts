@@ -1,33 +1,28 @@
-# Changelog
-All notable changes to this project will be documented in this file.
+#+title: project-name NEWS – history of user-visible changes
+#+startup: content
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic
-Versioning](https://semver.org/spec/v2.0.0.html).
+* Changes in 0.2.0
+** New Features
+- First "real" release.
+- Four Scripts: run-backups, adlmidi-wrapper, generate-localweb, and
+  display-encoded-wifi.
+- Standardized project structure.
+** Bugfixes
 
-## [Unreleased]
-### Added
-    - `ssh-wrapper` - Allows system-ssh to easily be called when also using Guix
-      Binary SSH.
-    - `pull-projects` - Quickly pull down all projects from my personal server.
-### Changed
-    - Updated this changelog to reflect progress post-0.1.0 release.
-### Removed
-    - Nothing.
+- No prior release, so "bugs" don't exist yet per se.
 
-## [0.1.0]
-### Added
-    - `adlmidi-wrapper` - allows standard calling of program with options, so it
-      can easily work with EMMS.
-    - `push-all-git-repos` - a scheme library to push all git repositories in a
-      specific directory. Has a wrapper in `pagr.scm`.
-    - Standard Project Files (README.md, Changelog.md, AUTHORS, LICENSE,
-      .gitignore).
-    - Autotools setup.
-### Changed
-    - Rewrote `pagr.sh` in GNU Guile Scheme as `pagr.scm`.
-### Removed
-    - Obsolete `pagr.sh` wrapper script for `push-all-git-repos`.
+* Postamble
+Copyright © (2022) Christopher Rodriguez <yewscion@gmail.com>
 
-[Unreleased]: https://git.sr.ht/~yewscion/yewscion-scripts/log
-[0.1.0]: https://git.sr.ht/~yewscion/yewscion-scripts/refs/0.1.0
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
+
+Please send bug reports to [[mailto:yewscion@gmail.com][yewscion@gmail.com]].
+
+
+
+# Local Variables:
+# mode: org
+# coding: utf-8-unix
+# End:

@@ -1,4 +1,13 @@
-(define-module (display-encoded-wifi)
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+|#
+(define-module (yewscion display-encoded-wifi)
   :use-module (ice-9 ftw)             ; Filesystem stuff
   :use-module (ice-9 rdelim)          ; Delimited I/O
   :use-module (ice-9 popen)           ; Pipes

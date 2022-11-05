@@ -1,0 +1,77 @@
+#!/usr/bin/env -S guile \\
+-e main -s
+!#
+(use-modules (cdr255 userlib)       ; Reimplement anything used from here.
+             (yewscion generate-localweb)    ; The library for this project.
+             (ice-9 getopt-long)    ; For CLI Options and Flags.
+             (ice-9 ftw)            ; For Filesystem Access.
+             (ice-9 textual-ports)  ; For Writing to Files.
+             (srfi srfi-1))         ; For reduce fold map etc.
+(define (main args)
+  (let* ((options (getopt-long args option-spec))
+         (version (option-ref options 'version #f))
+         (listing (option-ref options 'listing #f))
+         (execute (option-ref options 'execute #f))
+         (help (or
+                (option-ref options 'help #f)
+                (= (length args) 0))))
+    (when version
+      (display version-string)
+      (quit))
+    (when help
+      (display help-string)
+      (quit))
+    (when listing
+      (display (string-append
+                (generate-command-string)
+                "\n"))
+      (quit))
+    (when execute
+      (generate-localweb)
+      (quit))))
+(define option-spec
+  '((version (single-char #\v) (value #f))
+    (help (single-char #\h) (value #f))
+    (execute (single-char #\x) (value #f))
+    (listing (single-char #\l) (value #f))))
+(define option-descriptions
+  `((version action "Display version string.")
+    (help action "Display this help text.")
+    (execute action ,(string-append
+                      "Print the command string that would be\n"
+                      (generate-string-space-fill "" 34)
+                      "used to call httrack with the current\n"
+                      (generate-string-space-fill "" 34)
+                      "configuration to the screen, for\n"
+                      (generate-string-space-fill "" 34)
+                      "testing purposes.\n"))
+    (listing action ,(string-append
+                      "Actually Generate the LocalWeb,\n"
+                      (generate-string-space-fill "" 34)
+                      "according to the current\n"
+                      (generate-string-space-fill "" 34)
+                      "configuration.\n"
+                      ))))
+(define package-license-string
+  (string-append
+   "This program is a part of @PACKAGE_STRING@.\n\n@LICENSE@\n\nYou are "
+   "welcome to change this software in any way You see fit. Some helpful"
+   "\ninformation should You choose to do so:\n\nBug Reports: "
+   "@PACKAGE_BUGREPORT@\nHomepage: @PACKAGE_URL@\nDocumentation: "
+   "@PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@\n\nHappy Hacking!"))
+(define version-string
+  "generate-localweb is part of @PACKAGE_STRING@.\n")
+(define notes-strings
+  '("  Will create and update a local archive at ~/Mirrors of all of the"
+    "  sites listed (one per line) in ~/Mirrors/mirrorlist.txt. No other"
+    "  configuration has been added yet."))
+(define help-string
+  (generate-help-string
+   "Usage: generate-localweb [-lhvx]"
+   option-spec
+   option-descriptions
+   notes-strings
+   package-license-string))
+(define deps-string
+  (generate-deps-string
+   '(("adlmidiplay" "libadlmidi"))))

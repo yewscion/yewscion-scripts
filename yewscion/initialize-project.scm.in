@@ -1,3 +1,12 @@
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+|#
 (define-module (yewscion initialize-project)
   :use-module (cdr255 userlib)
   :use-module (ice-9 ftw)

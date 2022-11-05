@@ -1,0 +1,60 @@
+#!/usr/bin/env -S guile \\
+-e main -s
+!#
+(use-modules (cdr255 userlib)       ; Reimplement anything used from here.
+             (yewscion display-encoded-wifi) ; Library for this script.
+             (ice-9 getopt-long)    ; For CLI Options and Flags.
+             (ice-9 ftw)            ; For Filesystem Access.
+             (ice-9 textual-ports)  ; For Writing to Files.
+             (srfi srfi-1))         ; For reduce fold map etc.
+(define (main args)
+  (let* ((options (getopt-long args option-spec))
+         (version (option-ref options 'version #f))
+         (help (option-ref options 'help #f))
+         (non-options (option-ref options '() #f))
+         (path (parse-path (dereference-env "PATH"))))
+    (cond  (version
+            (display version-string)
+            (quit))
+           (help 
+            (display help-string)
+            (quit))
+           ((or
+             (not (search-path path "nmcli"))
+             (not (search-path path "sed"))
+             (not (search-path path "grep"))
+             (not (search-path path "sha1sum")))
+            (display deps-string))
+           (else
+            (display (string->encoded-string
+                      (get-result-line shell-command-string)))))))
+(define option-spec
+  '((version (single-char #\v) (value #f))
+    (help (single-char #\h) (value #f))))
+(define option-descriptions
+  '((version action "Display version string.")
+    (help action "Display this help text.")))
+(define package-license-string
+  (string-append
+   "This program is a part of @PACKAGE_STRING@.\n\n@LICENSE@\n\nYou are "
+   "welcome to change this software in any way You see fit. Some helpful"
+   "\ninformation should You choose to do so:\n\nBug Reports: "
+   "@PACKAGE_BUGREPORT@\nHomepage: @PACKAGE_URL@\nDocumentation: "
+   "@PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@\n\nHappy Hacking!"))
+(define version-string
+  "display-encoded-wifi is part of @PACKAGE_STRING@.\n")
+(define notes-strings
+  #f)
+(define help-string
+  (generate-help-string
+   "Usage: display-encoded-wifi [-hv]"
+   option-spec
+   option-descriptions
+   notes-strings
+   package-license-string))
+(define deps-string
+   (generate-deps-string
+    '(("nmcli" "NetworkManager")
+      ("sed" "coreutils")
+      ("grep" "coreutils")
+      ("sha1sum" "coreutils"))))

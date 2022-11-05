@@ -1,0 +1,87 @@
+#!/usr/bin/env -S guile \\
+-e main -s
+!#
+(use-modules (cdr255 userlib)       ; Reimplement anything used from here.
+             (run-backups)
+             (ice-9 getopt-long)    ; For CLI Options and Flags.
+             (ice-9 ftw)            ; For Filesystem Access.
+             (ice-9 textual-ports)  ; For Writing to Files.
+             (srfi srfi-1))         ; For reduce fold map etc.
+(define (main args)
+  (let* ((options (getopt-long args option-spec))
+         (version (option-ref options 'version #f))
+         (help (option-ref options 'help #f))
+         (non-options (option-ref options '() #f)))
+    (when version
+      (display version-string)
+      (quit))
+    (when help
+      (display help-string)
+      (quit))
+    (when (> (length non-options) 0)
+      (display help-string))
+    (when (and (not repository) (not directories))
+      (run-backups)
+      (quit))
+    (when (and repository directories)
+      (run-backups #:repository repository #:directories directories)
+      (quit))
+    (when repository
+      (run-backups #:repository repository)
+      (quit))
+    (when directories
+      (run-backups #:directories directories)
+      (quit))))
+(define option-spec
+  '((version (single-char #\v) (value #f))
+    (help (single-char #\h) (value #f))
+    (repository (single-char #\r) (value #f))
+    (directories (single-char #\d) (value #f))))
+(define option-descriptions
+  `((version action "Display version string.")
+    (help action "Display this help text.")
+    (repository option ,(string-append
+                         "Set the restic repository for use with\n"
+                         (generate-string-space-fill "" 34)
+                         "this backup. Default: \"~/Backups\"."))
+    (directories option ,(string-append
+                          "A newline-delimited list of directories\n"
+                          (generate-string-space-fill "" 34)
+                          "to back up this time. Default: \"~/.local/bin\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Archives\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Books\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Mail\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Mirrors\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Music\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Pictures\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Research\n"
+                          (generate-string-space-fill "" 65)
+                          "~/Videos\"."))))
+(define package-license-string
+  (string-append
+   "This program is a part of @PACKAGE_STRING@.\n\n@LICENSE@\n\nYou are "
+   "welcome to change this software in any way You see fit. Some helpful"
+   "\ninformation should You choose to do so:\n\nBug Reports: "
+   "@PACKAGE_BUGREPORT@\nHomepage: @PACKAGE_URL@\nDocumentation: "
+   "@PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@\n\nHappy Hacking!"))
+(define version-string
+  "run-backups is part of @PACKAGE_STRING@.\n")
+(define notes-strings
+  #f)
+(define help-string
+  (generate-help-string
+   "Usage: run-backups [-r \"REPO\"] [-d \"DIRECTORY\"]"
+   option-spec
+   option-descriptions
+   notes-strings
+   package-license-string))
+(define deps-string
+   (generate-deps-string
+    '(("restic" "restic"))))

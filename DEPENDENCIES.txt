@@ -1,0 +1,27 @@
+This file lists all of the libraries this repository depends on, in case You
+don't want to or can't use GNU Guix.
+
+- autoconf
+- automake
+- pkg-config
+- texinfo
+- guile3
+
+These are the programs called by the scripts, but not explicitly propagated
+by GNU Guix so users can use whichever versions they want on their systems:
+
+- libadlmidi
+- NetworkManager
+- coreutils
+- restic
+- httrack
+
+Here are a few more dependencies for interacting with the repository itself.
+
+- bzip2 / gzip
+- git
+- git send-email
+- emacs
+- bash
+
+Hope that helps!

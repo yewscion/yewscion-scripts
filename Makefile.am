@@ -1,70 +1,134 @@
-include guile.am
+# Template Variables: yewscion-scripts
+################################################################################
 
-SOURCES =				\
-pull-projects.scm                       \
-display-encoded-wifi.scm                \
-generate-localweb.scm                   \
-run-backups.scm
+# Set Up Guile Variables
 
-EXTRA_DIST =				\
-README.md				\
-bootstrap				\
-pre-inst-env.in				\
-bin/adlmidi-wrapper.scm			\
-bin/ssh-wrapper.scm                     \
-bin/pull-projects.scm                   \
-bin/display-encoded-wifi.scm            \
-bin/generate-localweb.scm               \
-bin/run-backups.scm
+GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch -Wformat
+
+## Directory for Uncompiled Guile Modules
+moddir=$(prefix)/share/guile/site/$(GUILE_EFFECTIVE_VERSION)
+
+## Directory for Compiled Guile Modules
+godir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
+
+## Same as above, but for transient Compiled Guile Modules
+ccachedir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
+
+## Handle substitution of fully-expanded Guile Autoconf variables.
+do_subst = $(SED)					\
+  -e 's,[@]GUILE[@],$(GUILE),g'				\
+  -e 's,[@]guilemoduledir[@],$(guilemoduledir),g'	\
+  -e 's,[@]guileobjectdir[@],$(guileobjectdir),g'	\
+  -e 's,[@]localedir[@],$(localedir),g'
+
+## Handle Special Build Reqs
+SUFFIXES = .scm .go
+.scm.go:
+	$(AM_V_GEN)$(top_builddir)/pre-inst-env $(GUILE_TOOLS) \
+	compile $(GUILE_WARNINGS) -o "$@" "$<"
+
+################################################################################
+
+# Set Up Other Variables
+
+## Enable local m4 cache
+ACLOCAL_AMFLAGS = -I m4
+
+## Documentation Compilation
+info_TEXINFOS = doc/yewscion-scripts.texi
+
+## Extra Files for Distribution
+EXTRA_DIST =  Changelog.md \
+              LICENSE \
+              COPYING \
+              NEWS \
+              AUTHORS \
+              README.org \
+              README.md \
+              Changelog.md \
+              ChangeLog \
+              COPYING \
+              m4/tar-edited.m4 \
+              guix.scm \
+              pre-inst-env.in \
+              doc/version.texi.in \
+              doc/fdl-1.3.texi \
+              doc/procedure-types.texi \
+	      tests/maintests.scm \
+	      build-aux/test-driver.scm
+
+## Cleaning Up
+
+### Clean Up Compiled Guile Modules
+clean-go:
+	-$(RM) $(GOBJECTS)
+.PHONY: clean-go
+
+### Filelist for make clean
+CLEANFILES =					\
+  $(GOBJECTS)					\
+  $(TESTS:tests/%.scm=%.log)				
+################################################################################
+# Define Inputs
+
+## Define Guile files
+GUILESOURCES = $(builddir)/yewscion/display-encoded-wifi.scm \
+	       $(builddir)/yewscion/generate-localweb.scm \
+	       $(builddir)/yewscion/initialize-project.scm \
+	       $(builddir)/yewscion/run-backups.scm
+
+## Don't Distribute, Don't Install
+nodist_noinst_SCRIPTS = pre-inst-env
+################################################################################
+
+# Define Outputs
+
+## Scripts that are not compiled
+bin_SCRIPTS = $(builddir)/bin/adlmidi-wrapper \
+	      $(builddir)/bin/display-encoded-wifi \
+	      $(builddir)/bin/generate-localweb \
+	      $(builddir)/bin/run-backups
+
+## Compiled Guile Modules (foo.go)
+GOBJECTS = $(GUILESOURCES:%.scm=%.go)
+
+## These are the actual Modules to Install, with directory structures intact
+## (nobase). They are tied to the appropriate dir above.
+nobase_mod_DATA = $(GUILESOURCES) $(NOCOMPSOURCES)
+nobase_go_DATA = $(GOBJECTS)
+
+## Make sure source files are installed first, so that the mtime of
+## installed compiled files is greater than that of installed source
+## files.  See
+## <http://lists.gnu.org/archive/html/guile-devel/2010-07/msg00125.html>
+## for details.
+guile_install_go_files = install-nobase_goDATA
+$(guile_install_go_files): install-nobase_modDATA
+
+## Symlinks Can Go Here, along with other end-of-install changes
+# install-data-hook:
+# 	$(LN_S) $(DESTDIR)$(bindir)/realfile $(DESTDIR)$(bindir)/link
+# 	chmod +x $(DESTDIR)$(javadir)/yewscion-scripts.jar
+
+## Sources and Extras
+EXTRA_DIST += $(GUILESOURCES) $(NOCOMP_SOURCES)
+################################################################################
+
+# Added Jobs
+
+################################################################################
 
 
-bin_SCRIPTS =				\
-adlmidi-wrapper				\
-ssh-wrapper                             \
-pull-projects                           \
-display-encoded-wifi                    \
-generate-localweb			\
-run-backups
+# Tests
+TEST_EXTENSIONS = .scm
+TESTS = tests/maintests.scm
+AM_TESTS_ENVIRONMENT = abs_top_srcdir="$(abs_top_srcdir)" GUILE_AUTO_COMPILE=0
 
-adlmidi-wrapper: bin/adlmidi-wrapper.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/adlmidi-wrapper.scm > ./adlmidi-wrapper
-	chmod +x adlmidi-wrapper
-generate-localweb: bin/generate-localweb.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/generate-localweb.scm > ./generate-localweb
-	chmod +x generate-localweb
-ssh-wrapper: bin/ssh-wrapper.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/ssh-wrapper.scm > ./ssh-wrapper
-	chmod +x ssh-wrapper
-pull-projects: bin/pull-projects.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/pull-projects.scm > ./pull-projects
-	chmod +x pull-projects
-display-encoded-wifi: bin/display-encoded-wifi.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/display-encoded-wifi.scm > ./display-encoded-wifi
-	chmod +x display-encoded-wifi
-run-backups: bin/run-backups.scm
-	sed -e 's,#!\/usr\/bin\/env -S guile -e main -s,\#!$(GUILE) \\,g' \
-	< $(srcdir)/bin/run-backups.scm > ./run-backups
-	chmod +x run-backups
-pull-projects.scm:
-	cat < $(srcdir)/share/guile/pull-projects.scm > \
-	pull-projects.scm
-display-encoded-wifi.scm:
-	cat < $(srcdir)/share/guile/display-encoded-wifi.scm > \
-	display-encoded-wifi.scm
-generate-localweb.scm:
-	cat < $(srcdir)/share/guile/generate-localweb.scm > \
-	generate-localweb.scm
-run-backups.scm:
-	cat < $(srcdir)/share/guile/run-backups.scm > \
-	run-backups.scm
-clean-local:
-	rm -rfv push-all-git-repos.scm pagr adlmidi-wrapper \
-	ssh-wrapper pull-projects pull-projects.scm config.log \
-	config.status pre-inst-env Makefile display-encoded-wifi.scm \
-	display-encoded-wifi generate-localweb.scm generate-localweb \
-	run-backups.scm run-backups *~
+SCM_LOG_DRIVER =                                 \
+   $(top_builddir)/pre-inst-env         \
+   $(GUILE) --no-auto-compile -L $(top_srcdir) -e main \
+       $(top_srcdir)/build-aux/test-driver.scm
+
+# Tell 'build-aux/test-driver.scm' to display only source file names,
+# not indivdual test names.
+AM_SCM_LOG_DRIVER_FLAGS = --brief=yes 
