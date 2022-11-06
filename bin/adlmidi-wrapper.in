@@ -20,7 +20,7 @@
           ((= (length non-options) 1)
            (system (string-append "adlmidiplay " (car non-options))))
           (else
-           (let ((systemcall (generate-system-call arguments)))
+           (let ((systemcall (generate-system-call non-options)))
              (system systemcall))))))
 (define option-spec
   '((version (single-char #\v) (value #f))

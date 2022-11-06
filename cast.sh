@@ -19,5 +19,5 @@ if [ -f "build" ]; then
 fi
 ./incant.sh
 guix build -K -f guix.scm bash coreutils guile
-guix shell -f guix.scm bash coreutils guile --rebuild-cache --pure -v4 -- guile
+guix shell -f guix.scm bash coreutils guile guile-cdr255 libadlmidi --rebuild-cache --pure -v4
 echo "Casting Complete. Make any needed changes now."
