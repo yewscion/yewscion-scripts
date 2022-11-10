@@ -1,37 +1,58 @@
 #!/usr/bin/env -S guile \\
 -e main -s
 !#
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+You are welcome to change this software in any way You see fit. Some
+helpful information should You choose to do so:
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+
+Happy Hacking!
+|#
 (use-modules (cdr255 userlib)       ; Reimplement anything used from here.
-             (run-backups)
+             (yewscion run-backups) ; This Script's Library.
              (ice-9 getopt-long)    ; For CLI Options and Flags.
              (ice-9 ftw)            ; For Filesystem Access.
              (ice-9 textual-ports)  ; For Writing to Files.
              (srfi srfi-1))         ; For reduce fold map etc.
+(define option-spec
+  '((version (single-char #\v) (value #f))
+    (help (single-char #\h) (value #f))
+    (repository (single-char #\r) (value #f))
+    (directories (single-char #\d) (value #f))))
 (define (main args)
   (let* ((options (getopt-long args option-spec))
          (version (option-ref options 'version #f))
+         (repository (option-ref options 'repository #f))
+         (directories (option-ref options 'directories #f))
          (help (option-ref options 'help #f))
          (non-options (option-ref options '() #f)))
-    (when version
-      (display version-string)
-      (quit))
-    (when help
-      (display help-string)
-      (quit))
-    (when (> (length non-options) 0)
-      (display help-string))
-    (when (and (not repository) (not directories))
-      (run-backups)
-      (quit))
-    (when (and repository directories)
-      (run-backups #:repository repository #:directories directories)
-      (quit))
-    (when repository
-      (run-backups #:repository repository)
-      (quit))
-    (when directories
-      (run-backups #:directories directories)
-      (quit))))
+    (cond (version
+           (display version-string)
+           (quit))
+          (help
+           (display help-string)
+           (quit))
+          ((> (length non-options) 0)
+           (display help-string))
+          ((and (not repository) (not directories))
+           (run-backups)
+           (quit))
+          ((and repository directories)
+           (run-backups #:repository repository #:directories directories)
+           (quit))
+          (repository
+           (run-backups #:repository repository)
+           (quit))
+          (directories
+           (run-backups #:directories directories)
+           (quit)))))
 (define option-spec
   '((version (single-char #\v) (value #f))
     (help (single-char #\h) (value #f))
@@ -85,3 +106,7 @@
 (define deps-string
    (generate-deps-string
     '(("restic" "restic"))))
+
+;; Local Variables:
+;; mode: scheme
+;; End:
