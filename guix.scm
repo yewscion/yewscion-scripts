@@ -7,6 +7,7 @@
  (guix build-system gnu)
  (gnu packages)
  (gnu packages autotools)
+ (gnu packages backup)
  (gnu packages pkg-config)
  (gnu packages texinfo)
  (gnu packages guile)
@@ -45,6 +46,7 @@
                       automake
                       texinfo
                       guile-cdr255))
+ (propagated-inputs (list restic))
  (synopsis "Utility Scripts from yewscion")
  (description
   (string-append
