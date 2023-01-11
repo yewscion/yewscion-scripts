@@ -13,12 +13,32 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
   :use-module (cdr255 combinators)
   :export (run-backups
            show-backups))
+
+(define (generate-backup-directories list-of-directories)
+  (let ((list-string (string-join list-of-directories
+                                  "\n"
+                                  'infix)))
+    (dereference-env-in-string
+     "HOME"
+     list-string)))
+(define (generate-backup-excludes list-of-excludes)
+  (string-join (map (lambda (x) 
+                      (string-append "--exclude "
+                                     x))
+                    list-of-excludes)
+               " "
+               'infix))
 (define default-backup-directories
-  (dereference-env-in-string
-   "HOME"
-   (string-append "$HOME/.local/bin\n$HOME/Archives\n$HOME/Books\n$HOME/Mail"
-                  "\n$HOME/Mirrors\n$HOME/Music\n$HOME/Pictures\n"
-                  "$HOME/Research\n$HOME/Videos")))
+  (generate-backup-directories
+   '("$HOME/.local/bin"
+     "$HOME/Archives"
+     "$HOME/Books"
+     "$HOME/Mail"
+     "$HOME/Mirrors"
+     "$HOME/Music"
+     "$HOME/Pictures"
+     "$HOME/Research"
+     "$HOME/Videos")))
 (define default-repository
   (dereference-env-in-string
    "HOME"
