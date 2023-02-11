@@ -31,7 +31,12 @@ Happy Hacking!
   (let* ((options (getopt-long args option-spec))
          (version (option-ref options 'version #f))
          (repository (option-ref options 'repository #f))
-         (directories (option-ref options 'directories #f))
+         (directories (if
+                       (option-ref options 'directories #f)
+                       (string-split
+                        (option-ref options 'directories #f)
+                        #\:)
+                       #f))
          (help (option-ref options 'help #f))
          (show (option-ref options 'show #f))
          (non-options (option-ref options '() #f)))
