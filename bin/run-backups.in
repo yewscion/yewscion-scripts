@@ -24,15 +24,20 @@ Happy Hacking!
 (define option-spec
   '((version (single-char #\v) (value #f))
     (help (single-char #\h) (value #f))
-    (repository (single-char #\r) (value #f))
-    (directories (single-char #\d) (value #f))))
+    (repository (single-char #\r) (value #t))
+    (directories (single-char #\d) (value #t))
+    (show (single-char #\s) (value #f))))
 (define (main args)
   (let* ((options (getopt-long args option-spec))
          (version (option-ref options 'version #f))
          (repository (option-ref options 'repository #f))
          (directories (option-ref options 'directories #f))
          (help (option-ref options 'help #f))
-         (non-options (option-ref options '() #f)))
+         (show (option-ref options 'show #f))
+         (non-options (option-ref options '() #f))
+         (show-or-run (if show
+                          show-backups
+                          run-backups)))
     (cond (version
            (display version-string)
            (quit))
@@ -42,22 +47,17 @@ Happy Hacking!
           ((> (length non-options) 0)
            (display help-string))
           ((and (not repository) (not directories))
-           (run-backups)
+           (show-or-run)
            (quit))
           ((and repository directories)
-           (run-backups #:repository repository #:directories directories)
+           (show-or-run #:repository repository #:directories directories)
            (quit))
           (repository
-           (run-backups #:repository repository)
+           (show-or-run #:repository repository)
            (quit))
           (directories
-           (run-backups #:directories directories)
+           (show-or-run #:directories directories)
            (quit)))))
-(define option-spec
-  '((version (single-char #\v) (value #f))
-    (help (single-char #\h) (value #f))
-    (repository (single-char #\r) (value #f))
-    (directories (single-char #\d) (value #f))))
 (define option-descriptions
   `((version action "Display version string.")
     (help action "Display this help text.")
@@ -84,7 +84,11 @@ Happy Hacking!
                           (generate-string-space-fill "" 65)
                           "~/Research\n"
                           (generate-string-space-fill "" 65)
-                          "~/Videos\"."))))
+                          "~/Videos\"."))
+    (show action ,(string-append
+                   "Displays the full restic call instead\n"
+                   (generate-string-space-fill "" 34)
+                   "of running it."))))
 (define package-license-string
   (string-append
    "This program is a part of @PACKAGE_STRING@.\n\n@LICENSE@\n\nYou are "
@@ -98,7 +102,7 @@ Happy Hacking!
   #f)
 (define help-string
   (generate-help-string
-   "Usage: run-backups [-r \"REPO\"] [-d \"DIRECTORY\"]"
+   "Usage: run-backups [-r \"REPO\"] [-d \"DIRECTORY\"] [-s] [-h | -v] "
    option-spec
    option-descriptions
    notes-strings
