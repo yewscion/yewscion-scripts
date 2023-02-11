@@ -41,7 +41,8 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
      "$HOME/Videos")))
 (define default-backup-excludes
   (generate-backup-excludes
-   '("**/inbox/**")))
+   '("**/inbox/**"
+     "inbox/**")))
 (define default-repository
   (dereference-env-in-string
    "HOME"
