@@ -11,9 +11,37 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
   :use-module (ice-9 ftw)
   :use-module (cdr255 userlib)
   :use-module (cdr255 combinators)
-  :export (run-backups
-           show-backups))
+  :export (restic))
+(define* (restic show? #:key (directories default-backup-directories)
+                 (repository default-repository)
+                 (excludes default-backup-excludes))
+  "Create a call to restic to execute the backups, either running
+or showing it to the user.
 
+This is an ACTION.
+
+Arguments
+=========
+
+SHOW? <boolean>: Whether to show or run the restic call.
+
+DIRECTORIES <<list> of <strings>>: A list of directories to back up.
+
+REPOSITORY <string>: A directory containing a restic repository.
+
+EXCLUDES <<list> of <strings>>: A list of patterns to avoid backing up.
+
+Returns
+=======
+
+Undefined.
+
+Impurities
+==========
+Used entirely for side effects."
+  (if show?
+      (show-restic directories repository excludes)
+      (run-restic directories repository excludes)))
 (define (generate-backup-directories list-of-directories)
   (let ((list-string (string-join list-of-directories
                                   "\n"

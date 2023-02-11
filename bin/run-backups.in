@@ -34,10 +34,7 @@ Happy Hacking!
          (directories (option-ref options 'directories #f))
          (help (option-ref options 'help #f))
          (show (option-ref options 'show #f))
-         (non-options (option-ref options '() #f))
-         (show-or-run (if show
-                          show-backups
-                          run-backups)))
+         (non-options (option-ref options '() #f)))
     (cond (version
            (display version-string)
            (quit))
@@ -47,16 +44,16 @@ Happy Hacking!
           ((> (length non-options) 0)
            (display help-string))
           ((and (not repository) (not directories))
-           (show-or-run)
+           (restic show)
            (quit))
           ((and repository directories)
-           (show-or-run #:repository repository #:directories directories)
+           (restic show #:repository repository #:directories directories)
            (quit))
           (repository
-           (show-or-run #:repository repository)
+           (restic show #:repository repository)
            (quit))
           (directories
-           (show-or-run #:directories directories)
+           (restic show #:directories directories)
            (quit)))))
 (define option-descriptions
   `((version action "Display version string.")
