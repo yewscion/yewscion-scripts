@@ -39,9 +39,11 @@ Undefined.
 Impurities
 ==========
 Used entirely for side effects."
+  (let ((gen-dirs (generate-backup-directories directories))
+        (gen-exes (generate-backup-excludes excludes)))
   (if show?
-      (show-restic directories repository excludes)
-      (run-restic directories repository excludes)))
+      (show-restic gen-dirs repository gen-exes)
+      (run-restic gen-dirs repository gen-exes))))
 (define (generate-backup-directories list-of-directories)
   (let ((list-string (string-join list-of-directories
                                   "\n"
@@ -56,21 +58,21 @@ Used entirely for side effects."
                     list-of-excludes)
                " "
                'infix))
+(define* (construct-restic-call directories repository excludes)
+    (string-append
+     "restic -r " repository " backup " excludes " " directories "\n"))
+;;; Apply B Combinator to system and construct-restic-call.
+(define run-restic
+  (bluebird system construct-restic-call))
+;;; Apply B Combinator to display and construct-restic-call.
+(define show-restic
+  (bluebird display construct-restic-call))
 (define default-backup-directories
-  (generate-backup-directories
-   '("$HOME/.local/bin"
-     "$HOME/Archives"
-     "$HOME/Books"
-     "$HOME/Mail"
-     "$HOME/Mirrors"
-     "$HOME/Music"
-     "$HOME/Pictures"
-     "$HOME/Research"
-     "$HOME/Videos")))
+   '("$HOME/.local/bin" "$HOME/Archives" "$HOME/Books" "$HOME/Mail"
+   "$HOME/Mirrors" "$HOME/Music" "$HOME/Pictures" "$HOME/Research"
+   "$HOME/Videos"))
 (define default-backup-excludes
-  (generate-backup-excludes
-   '("**/inbox/**"
-     "inbox/**")))
+   '("**/inbox/**" "inbox/**"))
 (define default-repository
   (dereference-env-in-string
    "HOME"
