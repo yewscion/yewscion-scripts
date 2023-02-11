@@ -45,12 +45,10 @@ Used entirely for side effects."
       (show-restic gen-dirs repository gen-exes)
       (run-restic gen-dirs repository gen-exes))))
 (define (generate-backup-directories list-of-directories)
-  (let ((list-string (string-join list-of-directories
-                                  "\n"
-                                  'infix)))
-    (dereference-env-in-string
-     "HOME"
-     list-string)))
+  (string-join (map (lambda (x) (replace-regexp-in-string
+                                 " +" "\\ "
+                                 (dereference-env-in-string "HOME" x)))
+                    list-of-directories) " " 'infix))
 (define (generate-backup-excludes list-of-excludes)
   (string-join (map (lambda (x) 
                       (string-append "--exclude "
@@ -74,41 +72,4 @@ Used entirely for side effects."
 (define default-backup-excludes
    '("**/inbox/**" "inbox/**"))
 (define default-repository
-  (dereference-env-in-string
-   "HOME"
-   "$HOME/Backups"))
-(define* (construct-restic-call directories repository excludes)
-  (let ((directory-string (join-directories directories)))
-    (string-append
-     "restic -r "
-     repository
-     " backup "
-     excludes
-     " "
-     directory-string)))
-(define* (procedure-wrapper procedure action #:rest args)
-  (apply action (list (apply procedure args))))
-(define* (show-backups #:key (directories
-                            default-backup-directories)
-                       (repository
-                        default-repository)
-                       (excludes
-                        default-backup-excludes))
-  (procedure-wrapper construct-restic-call
-                     display
-                     directories
-                     repository
-                     excludes))
-(define* (run-backups #:key (directories
-                             default-backup-directories)
-                      (repository
-                       default-repository)
-                      (excludes
-                       default-backup-excludes))
-  (procedure-wrapper construct-restic-call
-                     system
-                     directories
-                     repository
-                     excludes))
-(define (join-directories directories)
-  (replace-regexp-in-string "\n" " " directories))
+  (dereference-env-in-string "HOME" "$HOME/Backups"))
