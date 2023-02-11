@@ -45,11 +45,50 @@ Used entirely for side effects."
       (show-restic gen-dirs repository gen-exes)
       (run-restic gen-dirs repository gen-exes))))
 (define (generate-backup-directories list-of-directories)
+  "Take a LIST-OF-DIRECTORIES, replace the $HOME variable in each one, and
+then form a newline-delimited string of the resulting directories.
+
+This is an ACTION.
+
+Arguments
+=========
+
+LIST-OF-DIRECTORIES <<list> of <strings>>: A list of directories.
+
+Returns
+=======
+
+A <string> representing the LIST-OF-DIRECTORIES, with no $HOME variables and
+spaces between each directory.
+
+Impurities
+==========
+Uses the current state of environment to replace $HOME."
   (string-join (map (lambda (x) (replace-regexp-in-string
                                  " +" "\\ "
                                  (dereference-env-in-string "HOME" x)))
                     list-of-directories) " " 'infix))
 (define (generate-backup-excludes list-of-excludes)
+  "Take a LIST-OF-EXCLUDES and generate the part of a restic call denoting
+patterns to exclude from the backup.
+
+This is a CALCULATION.
+
+Arguments
+=========
+
+LIST-OF-EXCLUDES <<list> of <strings>>: A list of patterns to exclude from
+the backup.
+
+Returns
+=======
+
+A <string> representing the exclusion part of a restic call.
+
+Impurities
+==========
+None."
+
   (string-join (map (lambda (x) 
                       (string-append "--exclude "
                                      x))
@@ -57,6 +96,28 @@ Used entirely for side effects."
                " "
                'infix))
 (define* (construct-restic-call directories repository excludes)
+  "Construct a standardized call to restic from the given arguments.
+
+This is a CACLULATION.
+
+Arguments
+=========
+
+DIRECTORIES <<list> of <strings>>: A list of directories to back up.
+
+REPOSITORY <string>: A directory containing a restic repository.
+
+EXCLUDES <<list> of <strings>>: A list of patterns to avoid backing up.
+
+Returns
+=======
+
+A <string> representing a restic call with the given arguments.
+
+
+Impurities
+==========
+None."
     (string-append
      "restic -r " repository " backup " excludes " " directories "\n"))
 ;;; Apply B Combinator to system and construct-restic-call.
