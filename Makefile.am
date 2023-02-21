@@ -39,14 +39,13 @@ ACLOCAL_AMFLAGS = -I m4
 info_TEXINFOS = doc/yewscion-scripts.texi
 
 ## Extra Files for Distribution
-EXTRA_DIST =	Changelog.md \
-		LICENSE \
+EXTRA_DIST =	LICENSE \
 		COPYING \
 		NEWS \
 		AUTHORS \
 		README.org \
 		README.md \
-		Changelog.md \
+		Changelog.org \
 		ChangeLog \
 		COPYING \
 		guix.scm \

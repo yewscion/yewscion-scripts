@@ -4,7 +4,7 @@
 
 **A Small Collection of Utility Scripts.**
 
-*Last Updated: 2023-02-21 (W08) 00:37:41 GMT*
+*Last Updated: 2023-02-21 (W08) 16:00:49 GMT*
 
 
 # Installation
@@ -31,6 +31,7 @@ repo and then do:
     ./cast.sh
 
 Either of these will create a profile with **just** this project in it, to mess around with.
+
 
 ## Source
 
@@ -64,13 +65,6 @@ its exported functions in guile by using its modules:
 
 Any binaries or scripts will be available in Your `$PATH`. A list of these
 is maintained in the info file. They all also have the `--help` flag, so
-Once `yewscion-scripts` in installed, You should be able to access all of
-its exported functions in guile by using its modules:
-
-    (use-modules (scripts main))
-
-Any binaries or scripts will be available in Your `$PATH`. A list of these
-is maintained in the info file. They all also have the `--help=` flag, so
 if You prefer learning that way, that is also available.
 
 

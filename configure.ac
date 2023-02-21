@@ -1,6 +1,6 @@
 dnl Process this file with autoconf
 AC_INIT([yewscion-scripts],
-        [0.2.0],
+        [0.2.1],
         [yewscion@gmail.com],
         [yewscion-scripts],
         [https://sr.ht/~yewscion/yewscion-scripts/])

@@ -1,6 +1,15 @@
-#+title: project-name NEWS – history of user-visible changes
+#+title: yewscion-scripts NEWS – history of user-visible changes
 #+startup: content
 
+* Changes in 0.2.1
+
+** New Features
+
+- Added update-all-remote-systems and pull-projects.
+  
+** Bugfixes
+
+- Integrated changes from Crane into new project structure. Restandardized.
 * Changes in 0.2.0
 ** New Features
 - First "real" release.
