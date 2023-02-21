@@ -131,6 +131,12 @@ EXTRA_DIST += $(JAVASOURCES) $(GUILESOURCES) $(NOCOMP_SOURCES)
 TEST_EXTENSIONS = .scm
 TESTS = tests/maintests.scm
 AM_TESTS_ENVIRONMENT = abs_top_srcdir="$(abs_top_srcdir)" GUILE_AUTO_COMPILE=0
+
+SCM_LOG_DRIVER =                                 \
+   $(top_builddir)/pre-inst-env         \
+   $(GUILE) --no-auto-compile -L $(top_srcdir) -e main \
+       $(top_srcdir)/build-aux/test-driver.scm
+
 # Tell 'build-aux/test-driver.scm' to display only source file names,
 # not indivdual test names.
 AM_SCM_LOG_DRIVER_FLAGS = --brief=yes 
