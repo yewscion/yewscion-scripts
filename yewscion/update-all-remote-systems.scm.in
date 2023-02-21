@@ -29,7 +29,9 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
   "guix pull -v4")
 
 (define default-guix-home-reconfigure-command
-  "guix home reconfigure ~/Documents/guix-home/home-configuration.scm")
+  (string-append
+   "guix home reconfigure "
+   "\\$HOME/Documents/guix-home/home-configuration.scm"))
 
 (define (remote-system->ssh-call remote-system)
     (string-append "ssh "
@@ -42,11 +44,12 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
   (string-append (remote-system->ssh-call remote-system)
                  command))
 
-(define show-command-string
-  ((bluebird display build-command-string)))
+(define (show-command-string remote-system command)
+  ((bluebird display build-command-string) remote-system command))
 
-(define run-command-string
-  ((bluebird system build-command-string)))
+
+(define (run-command-string remote-system command)
+  ((bluebird system build-command-string) remote-system command))
 
 (define (update-remote-system system)
   (run-command-string system default-guix-pull-command)

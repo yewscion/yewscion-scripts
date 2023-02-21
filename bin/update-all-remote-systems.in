@@ -15,19 +15,31 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
 
 Happy Hacking!
 |#
-(use-modules (yewscion update-all-remote-systems)
-             (ice-9 getopt-long)   ; For CLI Options and Flags.
-             (cdr255 userlib)      ; My personal user library.
+(use-modules (ice-9 getopt-long)   ; For CLI Options and Flags.
              (ice-9 ftw)           ; For Filesystem Access.
              (ice-9 textual-ports) ; For Writing to Files.
-             (srfi srfi-19))       ; For Dates.
-
+             (srfi srfi-19)        ; For Dates.
+             (cdr255 userlib)      ; My personal user library.
+             (yewscion update-all-remote-systems))
 ;;; Specific Script Variables
+(define %default-config
+  ";;; Configuration File for update-all-remote-systems.
+;;; Part of the yewscion-scripts project.
+;;;
+;;; Edit/Add new systems as below. First argument is the host name, second
+;;; is the url, and third is the SSH port.
+;;;
 
-(define list-of-systems
-  (map apply
-       configuration))
+(list
+  (make-remote-system \"foo\" \"www.bar.com\" 22))
+")
 
+(define configuration
+  (get-or-create-configuration-file
+   "$HOME/.config/yewscion-scripts/update-all-remote-systems.scm"
+   %default-config))
+
+(eval-string configuration)
 
 ;;; Main
 (define option-spec
@@ -43,50 +55,26 @@ Happy Hacking!
     (cond ((or
             (not (equal? (length non-options) 0))
             help
-            version)           
+            version)
            (display %help-string))
           (%missing
            (display %missing))
           (else
-           (update-all-remote-systems list-of-systems)))))
-
+           (update-all-remote-systems update-all-remote-systems-configuration)))))
 
 ;;; Standard Script Variables
-(define %default-config
-  ";;; Configuration File for update-all-remote-systems.
-;;; Part of the yewscion-scripts project.
-;;;
-;;; Edit/Add new systems as below. First argument is the host name, second
-;;; is the url, and third is the SSH port.
-;;;
-
-(list
-  (make-remote-system \"foo\" \"www.bar.com\" 22))
-")
-
-(define %help-string
-  (generate-help-string "Usage: update-all-remote-systems [-h|-v]"
-                        option-spec
-                        description-spec
-                        note-spec
-                        license-spec))
 (define %command-and-package-alist
   '(("ssh" "openssh")))
 
-(define configuration
-  (get-or-create-configuration-file
-   "$HOME/.config/yewscion-scripts/update-all-remote-systems.scm"
-   %default-config))
-
 (define description-spec
-  '((help action \"Display this help\")
-    (version option \"Display version info\")))  
+  '((help action "Display this help")
+    (version action "Display version info")))
 
 (define note-spec
-  (string-append "This program depends on ssh, and expects guix to be\n"
-                 "installed on the remote systems. The configuration\n"
-                 "file is located at:\n\"$HOME/.config/yewscion-scripts/"
-                 "update-all-remote-systems.scm\".\n\n"))
+  (list (string-append "This program depends on ssh, and expects guix to be\n"
+                       "installed on the remote systems. The configuration\n"
+                       "file is located at:\n\"$HOME/.config/yewscion-scripts/"
+                       "update-all-remote-systems.scm\".\n\n")))
 
 (define license-spec
   (string-append
@@ -102,6 +90,12 @@ Happy Hacking!
    "Guile Online Help: <https://www.gnu.org/software/guile/>\n"
    "Local Online Help: 'info @PACKAGE_STRING@'\n"))
 
+(define %help-string
+  (generate-help-string "Usage: update-all-remote-systems [-h|-v]"
+                        option-spec
+                        description-spec
+                        note-spec
+                        license-spec))
 (define %missing
   (missing-commands %command-and-package-alist))
 
