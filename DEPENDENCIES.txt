@@ -6,6 +6,15 @@ don't want to or can't use GNU Guix.
 - texinfo
 - guile3
 
+These are the programs called by the scripts, but not explicitly propagated
+by GNU Guix so users can use whichever versions they want on their systems:
+
+- libadlmidi
+- NetworkManager
+- coreutils
+- restic
+- httrack
+
 Here are a few more dependencies for interacting with the repository itself.
 
 - bzip2 / gzip

@@ -35,7 +35,8 @@ SUFFIXES = .scm .go
 ACLOCAL_AMFLAGS = -I m4
 
 ## Documentation Compilation
-#info_TEXINFOS = doc/yewscion-scripts.texi
+
+info_TEXINFOS = doc/yewscion-scripts.texi
 
 ## Extra Files for Distribution
 EXTRA_DIST =	Changelog.md \
@@ -57,26 +58,12 @@ EXTRA_DIST =	Changelog.md \
 		doc/fdl-1.3.texi \
 		doc/procedure-types.texi \
 		m4/tar-edited.m4 \
-		m4/m4_ax_check_class.m4 \
-		m4/m4_ax_check_classpath.m4 \
-		m4/m4_ax_check_java_home.m4 \
-		m4/m4_ax_check_java_plugin.m4 \
-		m4/m4_ax_check_junit.m4 \
-		m4/m4_ax_java_check_class.m4 \
-		m4/m4_ax_java_options.m4 \
-		m4/m4_ax_prog_jar.m4 \
-		m4/m4_ax_prog_java_cc.m4 \
-		m4/m4_ax_prog_javac.m4 \
-		m4/m4_ax_prog_javac_works.m4 \
-		m4/m4_ax_prog_javadoc.m4 \
-		m4/m4_ax_prog_javah.m4 \
-		m4/m4_ax_prog_java.m4 \
-		m4/m4_ax_prog_java_works.m4 \
-		m4/m4_ax_try_compile_java.m4 \
-		m4/m4_ax_try_run_java.m4 \
 		bin/adlmidi-wrapper.in \
 		bin/pull-projects.in \
-		bin/display-encoded-wifi.in
+		bin/display-encoded-wifi.in \
+		bin/generate-localweb.in \
+		bin/run-backups.in \
+		bin/update-all-remote-systems.in
 
 ## Cleaning Up
 
@@ -93,9 +80,11 @@ CLEANFILES =					\
 # Define Inputs
 
 # ## Define Guile files
-GUILESOURCES = 	$(srcdir)/yewscion/pull-projects.scm \
-		$(srcdir)/yewscion/display-encoded-wifi.scm \
-		$(srcdir)/yewscion/update-all-remote-systems.scm
+GUILESOURCES = 	$(builddir)/yewscion/pull-projects.scm \
+		$(builddir)/yewscion/generate-localweb.scm \
+		$(builddir)/yewscion/display-encoded-wifi.scm \
+		$(builddir)/yewscion/update-all-remote-systems.scm \
+		$(builddir)/yewscion/run-backups.scm
 
 
 ## Don't Distribute, Don't Install
@@ -108,7 +97,9 @@ nodist_noinst_SCRIPTS = pre-inst-env
 bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
 		$(builddir)/bin/pull-projects \
 		$(builddir)/bin/display-encoded-wifi \
-		$(builddir)/bin/update-all-remote-systems
+		$(builddir)/bin/update-all-remote-systems \
+		$(builddir)/bin/generate-localweb \
+		$(builddir)/bin/run-backups
 
 ## Compiled Guile Modules (foo.go)
 GOBJECTS = $(GUILESOURCES:%.scm=%.go)
@@ -141,12 +132,6 @@ EXTRA_DIST += $(JAVASOURCES) $(GUILESOURCES) $(NOCOMP_SOURCES)
 TEST_EXTENSIONS = .scm
 TESTS = tests/maintests.scm
 AM_TESTS_ENVIRONMENT = abs_top_srcdir="$(abs_top_srcdir)" GUILE_AUTO_COMPILE=0
-
-SCM_LOG_DRIVER =                                 \
-   $(top_builddir)/pre-inst-env         \
-   $(GUILE) --no-auto-compile -L $(top_srcdir) -e main \
-       $(top_srcdir)/build-aux/test-driver.scm
-
 # Tell 'build-aux/test-driver.scm' to display only source file names,
 # not indivdual test names.
 AM_SCM_LOG_DRIVER_FLAGS = --brief=yes 

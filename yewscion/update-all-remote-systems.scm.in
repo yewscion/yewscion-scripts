@@ -1,3 +1,12 @@
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+|#
 (define-module (yewscion update-all-remote-systems)
   :use-module (srfi srfi-9)
   :use-module (cdr255 combinators)

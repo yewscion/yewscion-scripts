@@ -1,11 +1,11 @@
-@c Variables: project-name Project Name project-category
+@c Variables: yewscion-scripts Yewscion Scripts Miscellaneous
 \input texinfo
 @c -*-texinfo-*-
 
 @c %**start of header
-@setfilename project-name.info
+@setfilename yewscion-scripts.info
 @documentencoding UTF-8
-@settitle Project Name Reference Manual
+@settitle Yewscion Scripts Reference Manual
 @c %**end of header
 
 @include version.texi
@@ -21,13 +21,13 @@ copy of the license is included in the section entitled ``GNU Free
 Documentation License''.
 @end copying
 
-@dircategory project-category
+@dircategory Miscellaneous
 @direntry
-* Project Name: (project-name).   
+* Yewscion Scripts: (yewscion-scripts).   
 @end direntry
 
 @titlepage
-@title The Project Name Manual
+@title The Yewscion Scripts Manual
 @author Christopher Rodriguez
 
 @page
@@ -40,12 +40,12 @@ Documentation License''.
 
 @c *********************************************************************
 @node Top
-@top Project Name
+@top Yewscion Scripts
 
-This document describes Project Name version @value{VERSION}.
+This document describes Yewscion Scripts version @value{VERSION}.
 
 @menu
-* Introduction::                Why Project Name?
+* Introduction::                Why Yewscion Scripts?
 
 * Wrappers::                    Wrappers around other programs.
 * Concept Index::               Concepts Used, and Where.

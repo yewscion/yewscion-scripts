@@ -1,6 +1,6 @@
 dnl Process this file with autoconf
 AC_INIT([yewscion-scripts],
-        [0.1.0],
+        [0.2.0],
         [yewscion@gmail.com],
         [yewscion-scripts],
         [https://sr.ht/~yewscion/yewscion-scripts/])
@@ -19,9 +19,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>."])
+AC_SUBST(PACKAGE_DOCS_COMMAND, [info])
 
-"])
+dnl Skip Multiline Variables in Automake per:
+dnl https://automake.gnu.narkive.com/99bOFWk4/multiline-variables-and-ac-subst#post2
 _AM_SUBST_NOTMAKE([LICENSE])
 AC_CONFIG_SRCDIR([README.md])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -54,5 +56,13 @@ AC_CONFIG_FILES([bin/adlmidi-wrapper],[chmod +x bin/adlmidi-wrapper])
 AC_CONFIG_FILES([bin/display-encoded-wifi],[chmod +x bin/display-encoded-wifi])
 AC_CONFIG_FILES([bin/pull-projects],[chmod +x bin/pull-projects])
 AC_CONFIG_FILES([bin/update-all-remote-systems],[chmod +x bin/update-all-remote-systems])
-dnl AC_CONFIG_FILES([doc/version.texi])
+AC_CONFIG_FILES([bin/generate-localweb],[chmod +x bin/generate-localweb])
+AC_CONFIG_FILES([bin/run-backups],[chmod +x bin/run-backups])
+AC_CONFIG_FILES([yewscion/display-encoded-wifi.scm])
+AC_CONFIG_FILES([yewscion/generate-localweb.scm])
+AC_CONFIG_FILES([yewscion/initialize-project.scm])
+AC_CONFIG_FILES([yewscion/run-backups.scm])
+AC_CONFIG_FILES([yewscion/pull-projects.scm])
+AC_CONFIG_FILES([yewscion/update-all-remote-systems.scm])
+AC_CONFIG_FILES([doc/version.texi])
 AC_OUTPUT

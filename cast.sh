@@ -27,6 +27,6 @@ guix build -K -f guix.scm bash coreutils
 guix shell -f guix.scm bash coreutils guile guile-cdr255 --rebuild-cache --pure -v4
 #
 # Default:
-#guix shell -f guix.scm bash coreutils --rebuild-cache --pure -v4
+# guix shell -f guix.scm bash coreutils --rebuild-cache --pure -v4
 
 echo "Casting Complete. Make any needed changes now."

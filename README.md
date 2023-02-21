@@ -32,7 +32,6 @@ repo and then do:
 
 Either of these will create a profile with **just** this project in it, to mess around with.
 
-
 ## Source
 
 If You don't want to use [GNU Guix](https://guix.gnu.org/),
@@ -65,6 +64,13 @@ its exported functions in guile by using its modules:
 
 Any binaries or scripts will be available in Your `$PATH`. A list of these
 is maintained in the info file. They all also have the `--help` flag, so
+Once `yewscion-scripts` in installed, You should be able to access all of
+its exported functions in guile by using its modules:
+
+    (use-modules (scripts main))
+
+Any binaries or scripts will be available in Your `$PATH`. A list of these
+is maintained in the info file. They all also have the `--help=` flag, so
 if You prefer learning that way, that is also available.
 
 

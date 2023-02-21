@@ -25,5 +25,5 @@ make
 DESTDIR=test/ make install
 tree test
 make dist
-mv -vt .. ./*.bz2
+mv -vt .. *.bz2
 echo "Incantation Complete."

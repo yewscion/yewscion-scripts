@@ -1,0 +1,136 @@
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+|#
+(define-module (yewscion run-backups)
+  :use-module (ice-9 ftw)
+  :use-module (cdr255 userlib)
+  :use-module (cdr255 combinators)
+  :export (restic))
+(define* (restic show? #:key (directories default-backup-directories)
+                 (repository default-repository)
+                 (excludes default-backup-excludes))
+  "Create a call to restic to execute the backups, either running
+or showing it to the user.
+
+This is an ACTION.
+
+Arguments
+=========
+
+SHOW? <boolean>: Whether to show or run the restic call.
+
+DIRECTORIES <<list> of <strings>>: A list of directories to back up.
+
+REPOSITORY <string>: A directory containing a restic repository.
+
+EXCLUDES <<list> of <strings>>: A list of patterns to avoid backing up.
+
+Returns
+=======
+
+Undefined.
+
+Impurities
+==========
+Used entirely for side effects."
+  (let ((gen-dirs (generate-backup-directories directories))
+        (gen-exes (generate-backup-excludes excludes)))
+  (if show?
+      (show-restic gen-dirs repository gen-exes)
+      (run-restic gen-dirs repository gen-exes))))
+(define (generate-backup-directories list-of-directories)
+  "Take a LIST-OF-DIRECTORIES, replace the $HOME variable in each one, and
+then form a newline-delimited string of the resulting directories.
+
+This is an ACTION.
+
+Arguments
+=========
+
+LIST-OF-DIRECTORIES <<list> of <strings>>: A list of directories.
+
+Returns
+=======
+
+A <string> representing the LIST-OF-DIRECTORIES, with no $HOME variables and
+spaces between each directory.
+
+Impurities
+==========
+Uses the current state of environment to replace $HOME."
+  (string-join (map (lambda (x) (replace-regexp-in-string
+                                 " +" "\\ "
+                                 (dereference-env-in-string "HOME" x)))
+                    list-of-directories) " " 'infix))
+(define (generate-backup-excludes list-of-excludes)
+  "Take a LIST-OF-EXCLUDES and generate the part of a restic call denoting
+patterns to exclude from the backup.
+
+This is a CALCULATION.
+
+Arguments
+=========
+
+LIST-OF-EXCLUDES <<list> of <strings>>: A list of patterns to exclude from
+the backup.
+
+Returns
+=======
+
+A <string> representing the exclusion part of a restic call.
+
+Impurities
+==========
+None."
+
+  (string-join (map (lambda (x) 
+                      (string-append "--exclude "
+                                     x))
+                    list-of-excludes)
+               " "
+               'infix))
+(define* (construct-restic-call directories repository excludes)
+  "Construct a standardized call to restic from the given arguments.
+
+This is a CACLULATION.
+
+Arguments
+=========
+
+DIRECTORIES <<list> of <strings>>: A list of directories to back up.
+
+REPOSITORY <string>: A directory containing a restic repository.
+
+EXCLUDES <<list> of <strings>>: A list of patterns to avoid backing up.
+
+Returns
+=======
+
+A <string> representing a restic call with the given arguments.
+
+
+Impurities
+==========
+None."
+    (string-append
+     "restic -r " repository " backup " excludes " " directories "\n"))
+;;; Apply B Combinator to system and construct-restic-call.
+(define run-restic
+  (bluebird system construct-restic-call))
+;;; Apply B Combinator to display and construct-restic-call.
+(define show-restic
+  (bluebird display construct-restic-call))
+(define default-backup-directories
+   '("$HOME/.local/bin" "$HOME/Archives" "$HOME/Books" "$HOME/Mail"
+   "$HOME/Mirrors" "$HOME/Music" "$HOME/Pictures" "$HOME/Research"
+   "$HOME/Videos"))
+(define default-backup-excludes
+   '("**/inbox/**" "inbox/**"))
+(define default-repository
+  (dereference-env-in-string "HOME" "$HOME/Backups"))
