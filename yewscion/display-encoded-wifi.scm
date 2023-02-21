@@ -1,4 +1,4 @@
-(define-module (display-encoded-wifi)
+(define-module (yewscion display-encoded-wifi)
   :use-module (ice-9 ftw)             ; Filesystem stuff
   :use-module (ice-9 rdelim)          ; Delimited I/O
   :use-module (ice-9 popen)           ; Pipes

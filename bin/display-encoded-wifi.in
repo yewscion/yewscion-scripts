@@ -1,7 +1,7 @@
 #!/usr/bin/env -S guile -e main -s
 -e main -s
 !#
-(use-modules (display-encoded-wifi))
+(use-modules (yewscion display-encoded-wifi))
 (define (main args)
   (let ((arguments (cdr args))
         (path (string-split (getenv "PATH") (lambda (x) (eqv? x #\:)))))
@@ -36,3 +36,7 @@
                      "- sha1sum (coreutils)\n\n")))
           (else
            (display (string->encoded-string (get-result-line shell-command-string)))))))
+
+;; Local Variables:
+;; mode: scheme
+;; End:

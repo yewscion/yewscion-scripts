@@ -1,7 +1,7 @@
 #!/usr/bin/env -S guile -e main -s
 -e main -s
 !#
-(use-modules (pull-projects))
+(use-modules (yewscion pull-projects))
 (define projects '("acreid"
                    "biblio"
                    "ccna"
@@ -36,3 +36,7 @@
                      "yewscion"
                      "git"
                      projects))
+
+;; Local Variables:
+;; mode: scheme
+;; End:

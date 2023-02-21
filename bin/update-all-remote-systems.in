@@ -1,0 +1,96 @@
+#!/usr/bin/env -S guile -e main -s
+-e main -s
+!#
+(use-modules (yewscion update-all-remote-systems)
+             (ice-9 getopt-long)   ; For CLI Options and Flags.
+             (cdr255 userlib)      ; My personal user library.
+             (ice-9 ftw)           ; For Filesystem Access.
+             (ice-9 textual-ports) ; For Writing to Files.
+             (srfi srfi-19))       ; For Dates.
+
+;;; Specific Script Variables
+
+(define list-of-systems
+  (map apply
+       configuration))
+
+
+;;; Main
+(define option-spec
+  '((version (single-char #\v) (value #f))
+    (help (single-char #\h) (value #f))))
+
+(define (main args)
+  (let* ((options (getopt-long args option-spec))
+         (version (option-ref options 'version #f))
+         (help (option-ref options 'help #f))
+                                        ; Add more here.
+         (non-options (option-ref options '() '())))
+    (cond ((or
+            (not (equal? (length non-options) 0))
+            help
+            version)           
+           (display %help-string))
+          (%missing
+           (display %missing))
+          (else
+           (update-all-remote-systems list-of-systems)))))
+
+
+;;; Standard Script Variables
+(define %default-config
+  ";;; Configuration File for update-all-remote-systems.
+;;; Part of the yewscion-scripts project.
+;;;
+;;; Edit/Add new systems as below. First argument is the host name, second
+;;; is the url, and third is the SSH port.
+;;;
+
+(list
+  (make-remote-system \"foo\" \"www.bar.com\" 22))
+")
+
+(define %help-string
+  (generate-help-string "Usage: update-all-remote-systems [-h|-v]"
+                        option-spec
+                        description-spec
+                        note-spec
+                        license-spec))
+(define %command-and-package-alist
+  '(("ssh" "openssh")))
+
+(define configuration
+  (get-or-create-configuration-file
+   "$HOME/.config/yewscion-scripts/update-all-remote-systems.scm"
+   %default-config))
+
+(define description-spec
+  '((help action \"Display this help\")
+    (version option \"Display version info\")))  
+
+(define note-spec
+  (string-append "This program depends on ssh, and expects guix to be\n"
+                 "installed on the remote systems. The configuration\n"
+                 "file is located at:\n\"$HOME/.config/yewscion-scripts/"
+                 "update-all-remote-systems.scm\".\n\n"))
+
+(define license-spec
+  (string-append
+   "This program is a part of @PACKAGE_STRING@\n"
+   "@LICENSE@"
+   "Please report bugs to @PACKAGE_BUGREPORT@\n"
+   "and see @PACKAGE_URL@\n"
+   "for the latest version.\n\n"
+
+   "This program is entirely written in GNU Guile Scheme,\n"
+   "and You are welcome to change it how You see fit.\n\n"
+    
+   "Guile Online Help: <https://www.gnu.org/software/guile/>\n"
+   "Local Online Help: 'info @PACKAGE_STRING@'\n"))
+
+(define %missing
+  (missing-commands %command-and-package-alist))
+
+;; Local Variables:
+;; mode: scheme
+;; End:

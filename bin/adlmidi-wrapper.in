@@ -37,3 +37,7 @@
              (newline)
              (system systemcall)
              (system "reset"))))))
+
+;; Local Variables:
+;; mode: scheme
+;; End:
