@@ -30,8 +30,9 @@ Happy Hacking!
 ;;; is the url, and third is the SSH port.
 ;;;
 
-(list
-  (make-remote-system \"foo\" \"www.bar.com\" 22))
+(define update-all-remote-systems-configuration
+  (list
+    (make-remote-system \"foo\" \"www.bar.com\" 22)))
 ")
 
 (define configuration
@@ -71,7 +72,7 @@ Happy Hacking!
     (version action "Display version info")))
 
 (define note-spec
-  (list (string-append "This program depends on ssh, and expects guix to be\n"
+  (list (string-append "This program depends on ssh, and expects guix and git to be\n"
                        "installed on the remote systems. The configuration\n"
                        "file is located at:\n\"$HOME/.config/yewscion-scripts/"
                        "update-all-remote-systems.scm\".\n\n")))
