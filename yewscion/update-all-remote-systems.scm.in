@@ -33,6 +33,10 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
    "guix home reconfigure "
    "\\$HOME/Documents/guix-home/home-configuration.scm"))
 
+(define default-guix-home-git-pull-command
+  (string-append
+   "git -C \\$HOME/Documents/guix-home/ pull"))
+
 (define (remote-system->ssh-call remote-system)
     (string-append "ssh "
                  (remote-system-url remote-system)
@@ -52,6 +56,7 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
   ((bluebird system build-command-string) remote-system command))
 
 (define (update-remote-system system)
+  (run-command-string system default-guix-home-git-pull-command)
   (run-command-string system default-guix-pull-command)
   (run-command-string system default-guix-home-reconfigure-command))
 
@@ -60,16 +65,20 @@ Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
             list-of-systems))
 
 (define (update-remote-system-custom system
-                                     pull-command
+                                     home-pull-command
+                                     guix-pull-command
                                      reconfigure-command)
-  (run-command-string system pull-command)
+  (run-command-string system home-pull-command)
+  (run-command-string system guix-pull-command)
   (run-command-string system reconfigure-command))
 
 (define (update-all-remote-systems-custom list-of-systems
-                                          pull-command
+                                          home-pull-command
+                                          guix-pull-command
                                           reconfigure-command)
   (for-each (lambda (x)
               (update-remote-system-custom x
-                                           pull-command
+                                           home-pull-command
+                                           guix-pull-command
                                            reconfigure-command))
             list-of-systems))
