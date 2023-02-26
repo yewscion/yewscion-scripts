@@ -58,6 +58,7 @@ EXTRA_DIST =	LICENSE \
 		doc/procedure-types.texi \
 		m4/tar-edited.m4 \
 		bin/adlmidi-wrapper.in \
+		bin/chromium-wrapper.in \
 		bin/pull-projects.in \
 		bin/display-encoded-wifi.in \
 		bin/generate-localweb.in \
@@ -94,6 +95,7 @@ nodist_noinst_SCRIPTS = pre-inst-env
 
 ## Scripts that are not compiled
 bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
+		$(builddir)/bin/chromium-wrapper \
 		$(builddir)/bin/pull-projects \
 		$(builddir)/bin/display-encoded-wifi \
 		$(builddir)/bin/update-all-remote-systems \
