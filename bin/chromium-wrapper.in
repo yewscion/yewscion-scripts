@@ -60,9 +60,9 @@ Happy Hacking!
                   (chrome (search-path path "google-chrome"))
                   (chromium (search-path path "chromium")))
              (cond (chrome
-                    (system chrome))
+                    (system (string-append chrome " " non-options)))
                    (chromium
-                    (system chromium))
+                    (system (string-append chromium " " non-options)))
                    (else
                     (display "No Chromium Found; Exiting…\n"))))))))
 
