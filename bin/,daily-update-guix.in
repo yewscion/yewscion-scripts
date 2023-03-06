@@ -1,0 +1,26 @@
+#!/usr/bin/env -S guile \\
+-e main -s
+!#
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+You are welcome to change this software in any way You see fit. Some
+helpful information should You choose to do so:
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+
+Happy Hacking!
+|#
+(define (main args)
+  (system
+   (string-append
+    "alacritty -e guix pull && "
+    "guix home reconfigure "
+    "$HOME/Documents/guix-home/home-configuration.scm")))
+;; Local Variables:
+;; mode: scheme
+;; End:

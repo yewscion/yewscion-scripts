@@ -62,6 +62,10 @@ EXTRA_DIST =	LICENSE \
 		bin/display-encoded-wifi.in \
 		bin/generate-localweb.in \
 		bin/run-backups.in \
+		bin/,google-messages.in \
+		bin/,scholar-social.in \
+		bin/,update-all-remote-systems.in \
+		bin/,daily-update-guix.in \
 		bin/update-all-remote-systems.in
 
 ## Cleaning Up
@@ -98,6 +102,10 @@ bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
 		$(builddir)/bin/display-encoded-wifi \
 		$(builddir)/bin/update-all-remote-systems \
 		$(builddir)/bin/generate-localweb \
+		$(builddir)/bin/,google-messages \
+		$(builddir)/bin/,scholar-social \
+		$(builddir)/bin/,update-all-remote-systems \
+		$(builddir)/bin/,daily-update-guix \
 		$(builddir)/bin/run-backups
 
 ## Compiled Guile Modules (foo.go)
