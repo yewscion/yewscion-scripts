@@ -53,6 +53,7 @@ AC_PROG_MKDIR_P
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 AC_CONFIG_FILES([bin/adlmidi-wrapper],[chmod +x bin/adlmidi-wrapper])
+AC_CONFIG_FILES([bin/chromium-wrapper],[chmod +x bin/chromium-wrapper])
 AC_CONFIG_FILES([bin/display-encoded-wifi],[chmod +x bin/display-encoded-wifi])
 AC_CONFIG_FILES([bin/pull-projects],[chmod +x bin/pull-projects])
 AC_CONFIG_FILES([bin/update-all-remote-systems],[chmod +x bin/update-all-remote-systems])
