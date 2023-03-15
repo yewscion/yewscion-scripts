@@ -20,7 +20,7 @@ Happy Hacking!
              (ice-9 textual-ports) ; For Writing to Files.
              (srfi srfi-19)        ; For Dates.
              (cdr255 userlib)      ; My personal user library.
-             )
+             (cdr255 combinators))
 ;;; Specific Script Variables
 (define %default-config
   ";;; Configuration File for sync-directory.
@@ -54,28 +54,35 @@ Happy Hacking!
                                         ; Add more here.
          (non-options (option-ref options '() '())))
     (cond ((or
-            (not (equal? (length non-options) 1))
+            (not (equal? (length non-options) 2))
             help
             version)
            (display %help-string))
           (%missing
            (display %missing))
           (else
-           (sync-directory sync-directory-configuration (car non-options))))))
+           (sync-directory sync-directory-configuration
+                           (car non-options)
+                           (cadr non-options))))))
 
+(define (build-command-string host remote-dir local-dir)
+  (string-append
+   "unison -rsync -fastcheck default -times -ignorelocks -contactquietly "
+   "-ui text -batch -prefer ssh://"
+   host "/" remote-dir " ./" local-dir " ssh://" host "/" remote-dir))
 
-(define (sync-directory config directory)
-  (let ((dir (canonicalize-path directory)))
-    (for-each (lamdba (x)
-                      (display (string-append
-                               "unison -rsync -fastcheck default "
-                               "-times -ignorelocks "
-                               "-contactquietly -ui text "
-                               "-batch -prefer ssh://"
-                               x dir " "
-                               dir " ssh://"
-                               x dir)))
-              config)))
+(define (show-command-string host remote-dir local-dir)
+  ((bluebird display build-command-string) host remote-dir local-dir))
+
+(define (run-command-string host remote-dir local-dir)
+  ((bluebird system build-command-string) host remote-dir local-dir))
+
+(define (sync-directory config directory remote-user)
+  (let ((dir (string-append "/home/" remote-user "/" directory)))
+    (for-each (lambda (x)
+                      (run-command-string x dir directory))
+              (map (lambda (x) (cadr x))
+                   config))))
 ;;; Standard Script Variables
 (define %command-and-package-alist
   '(("ssh" "openssh")

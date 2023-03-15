@@ -67,6 +67,7 @@ EXTRA_DIST =	LICENSE \
 		bin/,scholar-social.in \
 		bin/,update-all-remote-systems.in \
 		bin/,daily-update-guix.in \
+		bin/sync-directory.in \
 		bin/update-all-remote-systems.in
 
 ## Cleaning Up
@@ -108,6 +109,7 @@ bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
 		$(builddir)/bin/,scholar-social \
 		$(builddir)/bin/,update-all-remote-systems \
 		$(builddir)/bin/,daily-update-guix \
+		$(builddir)/bin/sync-directory \
 		$(builddir)/bin/run-backups
 
 ## Compiled Guile Modules (foo.go)

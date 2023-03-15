@@ -8,6 +8,9 @@
  (gnu packages autotools)
  (gnu packages backup)
  (gnu packages pkg-config)
+ (gnu packages ssh)
+ (gnu packages rsync)
+ (gnu packages ocaml)
  (gnu packages texinfo)
  (gnu packages guile)
  (cdr255 yewscion)
@@ -42,7 +45,10 @@
      (delete 'strip))))
  (native-inputs (list autoconf automake pkg-config texinfo
                       guile-cdr255))
- (propagated-inputs (list restic))
+ (propagated-inputs (list restic
+                          openssh
+                          rsync
+                          unison))
  (inputs (list guile-3.0-latest))
  (synopsis "Utility Scripts from yewscion")
  (description
