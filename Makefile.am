@@ -64,6 +64,7 @@ EXTRA_DIST =	LICENSE \
 		bin/generate-localweb.in \
 		bin/run-backups.in \
 		bin/,google-messages.in \
+		bin/,amazon-chime.in \
 		bin/,scholar-social.in \
 		bin/,update-all-remote-systems.in \
 		bin/,daily-update-guix.in \
@@ -106,6 +107,7 @@ bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
 		$(builddir)/bin/update-all-remote-systems \
 		$(builddir)/bin/generate-localweb \
 		$(builddir)/bin/,google-messages \
+		$(builddir)/bin/,amazon-chime \
 		$(builddir)/bin/,scholar-social \
 		$(builddir)/bin/,update-all-remote-systems \
 		$(builddir)/bin/,daily-update-guix \

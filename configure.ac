@@ -60,6 +60,7 @@ AC_CONFIG_FILES([bin/update-all-remote-systems],[chmod +x bin/update-all-remote-
 AC_CONFIG_FILES([bin/generate-localweb],[chmod +x bin/generate-localweb])
 AC_CONFIG_FILES([bin/run-backups],[chmod +x bin/run-backups])
 AC_CONFIG_FILES([bin/,google-messages],[chmod +x bin/,google-messages])
+AC_CONFIG_FILES([bin/,amazon-chime],[chmod +x bin/,amazon-chime])
 AC_CONFIG_FILES([bin/,scholar-social],[chmod +x bin/,scholar-social])
 AC_CONFIG_FILES([bin/,daily-update-guix],[chmod +x bin/,daily-update-guix])
 AC_CONFIG_FILES([bin/,update-all-remote-systems],[chmod +x bin/,update-all-remote-systems])
