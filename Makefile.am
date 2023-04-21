@@ -69,6 +69,7 @@ EXTRA_DIST =	LICENSE \
 		bin/,update-all-remote-systems.in \
 		bin/,daily-update-guix.in \
 		bin/sync-directory.in \
+		bin/get-bat0-percent.in \
 		bin/update-all-remote-systems.in
 
 ## Cleaning Up
@@ -112,6 +113,7 @@ bin_SCRIPTS = 	$(builddir)/bin/adlmidi-wrapper	\
 		$(builddir)/bin/,update-all-remote-systems \
 		$(builddir)/bin/,daily-update-guix \
 		$(builddir)/bin/sync-directory \
+		$(builddir)/bin/get-bat0-percent \
 		$(builddir)/bin/run-backups
 
 ## Compiled Guile Modules (foo.go)
