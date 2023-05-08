@@ -71,16 +71,21 @@ Happy Hacking!
 
 (define (battery-warning)
   ""
-  (let* ((energy-now (get-number-from-file
+  (let* ((status (replace-regexp-in-string
+                  "\n" ""
+                  (get-file-as-string
+                   "/sys/class/power_supply/BAT0/status")))
+         (energy-now (get-number-from-file
                       "/sys/class/power_supply/BAT0/energy_now"))
          (energy-full (get-number-from-file
                        "/sys/class/power_supply/BAT0/energy_full"))
          (energy-percent (* (/ energy-now energy-full) 100)))
-    (if (< energy-percent 10)
-        (system (string-append
-                 "zenity --warning --text=\"Battery is currently at "
-                 (number->string energy-percent)
-                 "%! Charge now!\" --ellipsize")))))
+    (if (not (eq? status "Charging"))
+        (if (< energy-percent 10)
+            (system (string-append
+                     "zenity --warning --text=\"Battery is currently at "
+                     (number->string energy-percent)
+                     "%! Charge now!\" --ellipsize"))))))
 
 ;;; Standard Script Variables
 
