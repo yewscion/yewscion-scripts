@@ -84,7 +84,7 @@ Happy Hacking!
         (if (< energy-percent 10)
             (system (string-append
                      "zenity --warning --text=\"Battery is currently at "
-                     (number->string energy-percent)
+                     (number->locale-string energy-percent)
                      "%! Charge now!\" --ellipsize"))))))
 
 ;;; Standard Script Variables
