@@ -20,6 +20,7 @@ Happy Hacking!
              (ice-9 ftw)           ; For Filesystem Access.
              (ice-9 textual-ports) ; For Writing to Files.
              (ice-9 format)
+             (ice-9 i18n)
              (srfi srfi-19)        ; For Dates.
              (cdr255 userlib))      ; My personal user library.
 ;;; Specific Script Variables
