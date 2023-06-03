@@ -71,12 +71,12 @@ Happy Hacking!
 
 (define (get-bat0-percent)
   ""
-  (let ((energy-now (get-number-from-file
-                     "/sys/class/power_supply/BAT0/energy_now"))
-        (energy-full (get-number-from-file
-                      "/sys/class/power_supply/BAT0/energy_full")))
+  (let ((charge-now (get-number-from-file
+                     "/sys/class/power_supply/BAT0/charge_now"))
+        (charge-full (get-number-from-file
+                      "/sys/class/power_supply/BAT0/charge_full")))
     (display
-     (format-battery-percent (* (/ energy-now energy-full) 100)))))
+     (format-battery-percent (* (/ charge-now charge-full) 100)))))
 
 ;;; Standard Script Variables
 
