@@ -144,7 +144,7 @@ Relies on underlying filesystem, and the /sys standard.
                       (battery-field-name 0 cevp "now")))
          (full (get-number-from-sys-file
                        (battery-field-name 0 cevp "full"))))
-    (battery-percent cevp now full)))
+    (battery-percent now full)))
 
 (define (display-bat0-percent)
   "Display the instantaneous percentage charge of BAT0 as reported under
