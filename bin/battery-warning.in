@@ -78,7 +78,7 @@ Happy Hacking!
 (define (build-zenity-command x)
   (string-append
    "zenity --warning --text=\"Battery is currently at "
-   (number->locale-string x)
+   x
    "%! Charge now!\" --ellipsize"))
 
 ;;; Standard Script Variables
