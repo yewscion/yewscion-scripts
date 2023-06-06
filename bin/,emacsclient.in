@@ -18,7 +18,7 @@ Happy Hacking!
 (define (main args)
   (system (string-append
            "env GTK_IM_MODULE=xim emacsclient -a '' -c"
-           args)))
+           (string-join (cdr args) " " 'infix))))
 ;; Local Variables:
 ;; mode: scheme
 ;; End:
