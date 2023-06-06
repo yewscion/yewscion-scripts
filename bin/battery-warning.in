@@ -72,7 +72,7 @@ Happy Hacking!
                    "/sys/class/power_supply/BAT0/status")))
          (charge-percent (get-bat0-percent)))
     (if (not (string=? status "Charging"))
-        (if (< charge-percent 10)
+        (if (< (string->number (substring charge-percent 0 3)) 10)
             (system (build-zenity-command charge-percent))))))
 
 (define (build-zenity-command x)
