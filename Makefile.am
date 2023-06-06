@@ -93,6 +93,7 @@ GUILESOURCES = 	$(builddir)/yewscion/pull-projects.scm \
 		$(builddir)/yewscion/generate-localweb.scm \
 		$(builddir)/yewscion/display-encoded-wifi.scm \
 		$(builddir)/yewscion/update-all-remote-systems.scm \
+		$(builddir)/yewscion/battery.scm \
 		$(builddir)/yewscion/run-backups.scm
 
 
