@@ -68,7 +68,7 @@ Happy Hacking!
 (define (build-command-string host remote-dir local-dir)
   (string-append
    "unison -rsync -fastcheck default -times -ignorelocks -contactquietly "
-   "-ui text -batch ./" local-dir " ssh://" host "/" remote-dir))
+   "-ui text ./" local-dir " ssh://" host "/" remote-dir))
 
 (define (show-command-string host remote-dir local-dir)
   ((bluebird display build-command-string) host remote-dir local-dir))
