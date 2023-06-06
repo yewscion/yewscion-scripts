@@ -1,0 +1,204 @@
+#|
+This program is a part of @PACKAGE_STRING@.
+
+@LICENSE@
+
+Bug Reports: @PACKAGE_BUGREPORT@
+Homepage: @PACKAGE_URL@
+Documentation: @PACKAGE_DOCS_COMMAND@ @PACKAGE_NAME@
+|#
+(define-module (yewscion battery)
+  :use-module (ice-9 ftw)
+  :use-module (srfi srfi-1)
+  :use-module (srfi srfi-98)
+  :use-module (ice-9 textual-ports)
+  :use-module (ice-9 format)
+  :use-module (cdr255 userlib)
+  :use-module (cdr255 combinators)
+  :export (format-battery-percent
+           battery-field-name
+           battery-percent
+           get-bat0-percent
+           display-bat0-percent))
+(define (format-battery-percent x)
+  "Format the given number as a percent of charge, for a battery.
+
+This is a CALCULATION.
+
+Arguments
+=========
+
+X <number>: The percentage, as a percentage (93.22) not a
+decimal (0.9322).
+
+Returns
+=======
+
+A <string> of the form X%, rounded to 2 decimal places.
+
+Impurities
+==========
+None.
+"
+  (format #f "~,2f%" x))
+
+(define (battery-field-name num cevp suf)
+  "Generate the path under /sys for the given battery metric.
+
+This is a CALCULATION.
+
+Arguments
+=========
+
+NUM <number>: The battery number, 'BAT0' would be 0.
+
+CEVP <string>: One of 'charge', 'energy', 'voltage', or 'power', depending
+on OS and battery type.
+
+SUF <string>: 'now' or 'full', depending on intended use.
+
+Returns
+=======
+
+The full path as a <string> to the specified battery's metric.
+
+Impurities
+==========
+None.
+"
+  (let ((pre (string-append
+              "/sys/class/power_supply/BAT"
+              (number->string num) "/")))
+    (string-append pre cevp "_" suf)))
+
+(define (battery-percent now full)
+  "Format a percentage based on the given numbers.
+
+This is a CALCULATION.
+
+Arguments
+=========
+
+NOW <number>: The 'current' value, the numerator of the percentage.
+
+FULL <number>: The 'total' value, the denominator of the percentage.
+
+Returns
+=======
+
+A <string> representing the resulting percentage, rounded to two decimal
+places with a percent sign appended.
+
+Impurities
+==========
+None.
+"
+  (format-battery-percent (* (/ now full) 100)))
+
+(define (get-number-from-sys-file x)
+  "Slurp the number from the given file path.
+
+This is an ACTION.
+
+Arguments
+=========
+
+X <string>: The file path to slurp.
+
+Returns
+=======
+
+A <number> representing the contents of X.
+
+Impurities
+==========
+
+Relies on underlying filesystem, and the /sys standard.
+"
+  (string->number
+   (replace-regexp-in-string "\n" ""
+                             (get-file-as-string x))))
+
+(define (get-bat0-percent)
+  "Get the instantaneous percentage charge of BAT0 as reported under /sys.
+
+This is an ACTION.
+
+Arguments
+=========
+
+None.
+
+Returns
+=======
+
+A <string> representing the present percentage of charge of BAT0.
+
+Impurities
+==========
+
+Relies on underlying filesystem, and the /sys standard.
+"
+  (let* ((cevp (cevp-check 0))
+         (now (get-number-from-sys-file
+                      (battery-field-name 0 cevp "now")))
+         (full (get-number-from-sys-file
+                       (battery-field-name 0 cevp "full"))))
+    (battery-percent cevp now full)))
+
+(define (display-bat0-percent)
+  "Display the instantaneous percentage charge of BAT0 as reported under
+/sys.
+
+This is an ACTION.
+
+Arguments
+=========
+
+None.
+
+Returns
+=======
+
+<undefined>.
+
+Impurities
+==========
+
+Relies on underlying filesystem, and the /sys standard. I/O.
+" 
+  ((bluebird display get-bat0-percent)))
+
+(define (cevp-check num)
+  "Check a given battery number for its supported /sys metrics.
+
+This is an ACTION.
+
+Arguments
+=========
+
+NUM <number>: The battery number, 'BAT0' would be 0.
+
+Returns
+=======
+
+A <string> which is one of 'charge', 'energy', 'voltage', or 'power',
+depending on those found in the given NUM battery's /sys folder.
+
+Impurities
+==========
+
+Relies on underlying filesystem, and the /sys standard.
+"
+
+  (let ((pre (string-append
+              "/sys/class/power_supply/BAT"
+              (number->string num) "/")))
+    (cond ((file-exists? (string-append pre "charge_now"))
+           "charge")
+          ((file-exists? (string-append pre "energy_now"))
+           "energy")
+          ((file-exists? (string-append pre "voltage_now"))
+           "voltage")
+          (else
+           "power"))))
