@@ -1,4 +1,7 @@
-#!/usr/bin/env -S guile \\ -e main -s !# #| This program is a part of
+#!/usr/bin/env -S guile \\
+-e main -s
+!#
+#| This program is a part of
 @PACKAGE_STRING@.
 
 @LICENSE@
