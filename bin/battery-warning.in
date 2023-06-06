@@ -79,7 +79,7 @@ Happy Hacking!
   (string-append
    "zenity --warning --text=\"Battery is currently at "
    x
-   "%! Charge now!\" --ellipsize"))
+   "! Charge now!\" --ellipsize"))
 
 ;;; Standard Script Variables
 
