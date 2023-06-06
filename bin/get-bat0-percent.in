@@ -1,8 +1,5 @@
-#!/usr/bin/env -S guile \\
--e main -s
-!#
-#|
-This program is a part of @PACKAGE_STRING@.
+#!/usr/bin/env -S guile \\ -e main -s !# #| This program is a part of
+@PACKAGE_STRING@.
 
 @LICENSE@
 
@@ -70,13 +67,35 @@ Happy Hacking!
   (format #f "~,2f%" x))
 
 (define (get-bat0-percent)
-  ""
-  (let ((charge-now (get-number-from-file
-                     "/sys/class/power_supply/BAT0/charge_now"))
-        (charge-full (get-number-from-file
-                      "/sys/class/power_supply/BAT0/charge_full")))
+  "ACTION"
+  (let* ((cevp (cevp-decider))
+         (now (get-number-from-file
+                      (bat0-item-name cevp "now")))
+         (full (get-number-from-file
+                       (bat0-item-name cevp "full"))))
     (display
-     (format-battery-percent (* (/ charge-now charge-full) 100)))))
+     (get-bat-percent cevp now full))))
+
+(define (get-bat-percent cevp now full)
+  "CALC"
+  (format-battery-percent (* (/ now full) 100)))
+
+(define (bat0-item-name cevp suf)
+  "CALC"
+  (let ((pre "/sys/class/power_supply/BAT0/"))
+    (string-append pre cevp "_" suf)))
+
+(define (cevp-decider)
+  "ACTION"
+  (let ((pre "/sys/class/power_supply/BAT0/"))
+    (cond ((file-exists? (string-append pre "charge_now"))
+           "charge")
+          ((file-exists? (string-append pre "energy_now"))
+           "energy")
+          ((file-exists? (string-append pre "voltage_now"))
+           "voltage")
+          (else
+           "power"))))
 
 ;;; Standard Script Variables
 
