@@ -21,6 +21,7 @@ Happy Hacking!
              (ice-9 textual-ports) ; For Writing to Files.
              (ice-9 format)
              (ice-9 i18n)
+             (yewscion battery)
              (srfi srfi-19)        ; For Dates.
              (cdr255 userlib))      ; My personal user library.
 ;;; Specific Script Variables
@@ -63,30 +64,22 @@ Happy Hacking!
           (else
            (battery-warning)))))
 
-(define (get-number-from-file x)
-  (string->number
-   (replace-regexp-in-string "\n" "" (get-file-as-string x))))
-
-(define (format-battery-percent x)
-  (format #f "~,2f%" x))
-
 (define (battery-warning)
   ""
-  (let* ((status (replace-regexp-in-string
+  (let ((status (replace-regexp-in-string
                   "\n" ""
                   (get-file-as-string
                    "/sys/class/power_supply/BAT0/status")))
-         (charge-now (get-number-from-file
-                      "/sys/class/power_supply/BAT0/charge_now"))
-         (charge-full (get-number-from-file
-                       "/sys/class/power_supply/BAT0/charge_full"))
-         (charge-percent (* (/ charge-now charge-full) 100)))
-    (if (not (eq? status "Charging"))
+         (charge-percent (get-bat0-percent)))
+    (if (not (string=? status "Charging"))
         (if (< charge-percent 10)
-            (system (string-append
-                     "zenity --warning --text=\"Battery is currently at "
-                     (number->locale-string energy-percent)
-                     "%! Charge now!\" --ellipsize"))))))
+            (system (build-zenity-command charge-percent))))))
+
+(define (build-zenity-command x)
+  (string-append
+   "zenity --warning --text=\"Battery is currently at "
+   (number->locale-string x)
+   "%! Charge now!\" --ellipsize"))
 
 ;;; Standard Script Variables
 
