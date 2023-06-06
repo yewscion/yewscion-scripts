@@ -18,6 +18,7 @@ Happy Hacking!
              (ice-9 textual-ports) ; For Writing to Files.
              (ice-9 format)
              (srfi srfi-19)        ; For Dates.
+             (yewscion battery)
              (cdr255 userlib))      ; My personal user library.
 ;;; Specific Script Variables
 
@@ -57,45 +58,8 @@ Happy Hacking!
                                         ; Add more here to handle
                                         ; options/edge cases.
           (else
-           (get-bat0-percent)))))
+           (display-bat0-percent)))))
 
-(define (get-number-from-file x)
-  (string->number
-   (replace-regexp-in-string "\n" "" (get-file-as-string x))))
-
-(define (format-battery-percent x)
-  (format #f "~,2f%" x))
-
-(define (get-bat0-percent)
-  "ACTION"
-  (let* ((cevp (cevp-decider))
-         (now (get-number-from-file
-                      (bat0-item-name cevp "now")))
-         (full (get-number-from-file
-                       (bat0-item-name cevp "full"))))
-    (display
-     (get-bat-percent cevp now full))))
-
-(define (get-bat-percent cevp now full)
-  "CALC"
-  (format-battery-percent (* (/ now full) 100)))
-
-(define (bat0-item-name cevp suf)
-  "CALC"
-  (let ((pre "/sys/class/power_supply/BAT0/"))
-    (string-append pre cevp "_" suf)))
-
-(define (cevp-decider)
-  "ACTION"
-  (let ((pre "/sys/class/power_supply/BAT0/"))
-    (cond ((file-exists? (string-append pre "charge_now"))
-           "charge")
-          ((file-exists? (string-append pre "energy_now"))
-           "energy")
-          ((file-exists? (string-append pre "voltage_now"))
-           "voltage")
-          (else
-           "power"))))
 
 ;;; Standard Script Variables
 
